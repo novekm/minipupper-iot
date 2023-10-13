@@ -20,7 +20,7 @@
 #define SHADOW_GET_SUB_TOPIC    ""
 #define SHADOW_UPDATE_PUB_TOPIC ""
 
-// Enter re:Invent WiFi Info Here
+// Enter WiFi Info Here
 #define WIFI_SSID_1        ""
 #define WIFI_PASSWORD_1    ""
 #define WIFI_SSID_2        ""
