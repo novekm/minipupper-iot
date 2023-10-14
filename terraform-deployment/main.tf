@@ -95,7 +95,7 @@ module "minipupper-iot-core" {
       username       = "default"
       given_name     = "Default"
       family_name    = "User"
-      email          = "default@exampcle.com"
+      email          = "default@example.com"
       email_verified = true // no touchy
     }
   }
