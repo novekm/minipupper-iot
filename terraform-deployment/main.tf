@@ -32,11 +32,11 @@ module "minipupper-iot-core" {
       short_name      = "MP1"
       computer_module = "RaspberryPi48"
     },
-    MiniPupper2 : {
-      name            = "MiniPupper2"
-      short_name      = "MP2"
-      computer_module = "RaspberryPi48"
-    },
+    # MiniPupper2 : {
+    #   name            = "MiniPupper2"
+    #   short_name      = "MP2"
+    #   computer_module = "RaspberryPi48"
+    # },
     # MiniPupper3 : {
     #   name            = "MiniPupper3"
     #   short_name      = "MP3"
@@ -74,13 +74,6 @@ module "minipupper-iot-core" {
   # - Cognito -
   # Admin Users to create
   mpc_admin_cognito_users = {
-    KevonMayers : {
-      username       = "kmayers"
-      given_name     = "Kevon"
-      family_name    = "Mayers"
-      email          = "novekm@amazon.com"
-      email_verified = true // no touchy
-    },
     NarutoUzumaki : {
       username       = "nuzumaki"
       given_name     = "Naruto"
