@@ -28,42 +28,45 @@ module "minipupper-iot-core" {
   all_minipuppers = {
     MiniPupper1 : {
       // no spaces allowed in strings
-      name            = "MiniPupper1"
-      short_name      = "MP1"
-      computer_module = "RaspberryPi48"
+      name             = "MiniPupper1"
+      short_name       = "MP1"
+      computer_module  = "RaspberryPi48"
+      manufacturer     = "Mangdang"
+      model            = "Mini Pupper 2"
+      registered_owner = "John Smith"
+      primary_location = "HOU14"
     },
-    # MiniPupper2 : {
-    #   name            = "MiniPupper2"
-    #   short_name      = "MP2"
-    #   computer_module = "RaspberryPi48"
-    # },
-    # MiniPupper3 : {
-    #   name            = "MiniPupper3"
-    #   short_name      = "MP3"
-    #   computer_module = "v1_1"
-    # },
-    # MiniPupper4 : {
-    #   name            = "MiniPupper4"
-    #   short_name      = "MP4"
-    #   computer_module = "v1_1"
-    # },
-    # MiniPupper5 : {
-    #   name            = "MiniPupper5"
-    #   short_name      = "MP5"
-    #   computer_module = "v1_1"
-    # },
-    # MiniPupper6 : {
-    #   name            = "MiniPupper6"
-    #   short_name      = "MP6"
-    #   computer_module = "v1_1"
-    # },
+    MiniPupper2 : {
+      name             = "MiniPupper2"
+      short_name       = "MP2"
+      computer_module  = "RaspberryPi48"
+      manufacturer     = "Mangdang"
+      model            = "Mini Pupper 2"
+      registered_owner = "John Smith"
+      primary_location = "HOU14"
+    },
+    MiniPupper3 : {
+      name             = "MiniPupper3"
+      short_name       = "MP3"
+      computer_module  = "RaspberryPi48"
+      manufacturer     = "Mangdang"
+      model            = "Mini Pupper 2"
+      registered_owner = "John Smith"
+      primary_location = "HOU14"
+    },
+
   }
   // Enter an object for each gas sensor you would like to connect
   all_gas_sensors = {
     // no spaces allowed in strings
     Gas1 : {
-      name       = "Gas1"
-      short_name = "G1"
+      name             = "Gas1"
+      short_name       = "G1"
+      computer_module  = "ESP32"
+      manufacturer     = "M5Stack"
+      model            = "M5StickC-Plus"
+      registered_owner = "Lee Jeknis"
+      primary_location = "HOU16"
     },
     # Gas2 : {
     #   name       = "Gas2"
@@ -74,6 +77,7 @@ module "minipupper-iot-core" {
   # - Cognito -
   # Admin Users to create
   mpc_admin_cognito_users = {
+    // replace with your desired cognito users
     NarutoUzumaki : {
       username       = "nuzumaki"
       given_name     = "Naruto"
@@ -81,22 +85,23 @@ module "minipupper-iot-core" {
       email          = "nuzumaki@hokage.com"
       email_verified = true // no touchy
     },
-    SasukeUchiha : {
-      username       = "suchiha"
-      given_name     = "Sasuke"
-      family_name    = "Uchiha"
-      email          = "suchiha@chidori.com"
-      email_verified = true // no touchy
-    },
+    # SasukeUchiha : {
+    #   username       = "suchiha"
+    #   given_name     = "Sasuke"
+    #   family_name    = "Uchiha"
+    #   email          = "suchiha@chidori.com"
+    #   email_verified = true // no touchy
+    # },
   }
   # Standard Users to create
-  mpc_standard_cognito_users = {
-    DefaultStandardUser : {
-      username       = "default"
-      given_name     = "Default"
-      family_name    = "User"
-      email          = "default@example.com"
-      email_verified = true // no touchy
-    }
-  }
+  # mpc_standard_cognito_users = {
+  #   // replace with your desired cognito users
+  #   DefaultStandardUser : {
+  #     username       = "default"
+  #     given_name     = "Default"
+  #     family_name    = "User"
+  #     email          = "default@example.com"
+  #     email_verified = true // no touchy
+  #   }
+  # }
 }
