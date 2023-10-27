@@ -17,7 +17,7 @@ import {
 export const CounterLink = ({ children }) => {
   return (
     // eslint-disable-next-line jsx-a11y/anchor-is-valid
-    <Link variant="awsui-value-large" href="/my-minipuppers">
+    <Link variant="awsui-value-large" href="/iot-devices">
       {children}
     </Link>
   );

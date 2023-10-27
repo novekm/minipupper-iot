@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TopNavigation } from '@cloudscape-design/components';
+import { applyMode, Mode } from "@cloudscape-design/global-styles";
 
 // Amplify
 import { Auth } from 'aws-amplify';
@@ -13,6 +14,8 @@ import logo from '../../../public/images/AWS_logo_RGB_REV.png';
 import '../../styles/top-navigation.scss';
 
 const TopNavigationHeader = ({ user }) => {
+
+  const [darkMode, setDarkMode] = useState(false);
   // Function to sign user out
   async function signOut() {
     try {
@@ -21,13 +24,41 @@ const TopNavigationHeader = ({ user }) => {
       console.log('error signing out: ', error);
     }
   }
+
+  const setDarkLightTheme = () => {
+    if (darkMode) {
+        localStorage.setItem('darkMode', false);
+        applyMode(Mode.Light)
+        setDarkMode(false)
+    } else {
+        localStorage.setItem('darkMode', true);
+        applyMode(Mode.Dark)
+        setDarkMode(true)
+    }
+  };
+
+  useEffect(() => {
+    setDarkMode(document.body.className === "awsui-dark-mode");
+    const darkModePreference = localStorage.getItem('darkMode')
+    if (darkModePreference === "true") {
+        applyMode(Mode.Dark)
+        setDarkMode(true)
+    }
+    else {
+        applyMode(Mode.Light)
+        setDarkMode(false)
+    }
+
+  }, []);
+
+
   return (
     <div id="h">
       <TopNavigation
         identity={{
           href: '/',
           // Your Company Name
-          title: `MiniPupper Control`,
+          title: `Mini Pupper Control`,
           logo: {
             src: logo,
             alt: 'Service',
@@ -40,6 +71,42 @@ const TopNavigationHeader = ({ user }) => {
             href: 'https://aws.amazon.com/',
             external: true,
             externalIconAriaLabel: ' (opens in a new tab)',
+          },
+          {
+            type: "button",
+            variant: "primary",
+            onClick: (() => setDarkLightTheme()),
+            iconSvg: Mode.Dark ? <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    d="M12.8166 9.79921C12.8417 9.75608 12.7942 9.70771 12.7497 9.73041C11.9008 10.164 10.9392 10.4085 9.92054 10.4085C6.48046 10.4085 3.69172 7.61979 3.69172 4.17971C3.69172 3.16099 3.93628 2.19938 4.36989 1.3504C4.39259 1.30596 4.34423 1.25842 4.3011 1.28351C2.44675 2.36242 1.2002 4.37123 1.2002 6.67119C1.2002 10.1113 3.98893 12.9 7.42901 12.9C9.72893 12.9 11.7377 11.6535 12.8166 9.79921Z"
+                    fill="white"
+                    stroke="white"
+                    strokeWidth="2"
+                    className="filled"
+                />
+            </svg> : <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    d="M12.8166 9.79921C12.8417 9.75608 12.7942 9.70771 12.7497 9.73041C11.9008 10.164 10.9392 10.4085 9.92054 10.4085C6.48046 10.4085 3.69172 7.61979 3.69172 4.17971C3.69172 3.16099 3.93628 2.19938 4.36989 1.3504C4.39259 1.30596 4.34423 1.25842 4.3011 1.28351C2.44675 2.36242 1.2002 4.37123 1.2002 6.67119C1.2002 10.1113 3.98893 12.9 7.42901 12.9C9.72893 12.9 11.7377 11.6535 12.8166 9.79921Z"
+                    fill="white"
+                    stroke="white"
+                    strokeWidth="2"
+                    className="filled"
+                />
+            </svg>,
+            text: darkMode ? "   Light Mode" : "   Dark Mode",
+            title: darkMode ? "   Light Mode" : "   Dark Mode",
           },
           {
             type: 'button',

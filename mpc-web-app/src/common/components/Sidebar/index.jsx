@@ -12,7 +12,7 @@ const Sidebar = () => {
       // TODO - Make active link work for navigation
       // activeHref={activeHref}
       activeHref={location.pathname}
-      header={{ text: 'MiniPupper Control', href: '/' }}
+      header={{ text: 'Mini Pupper Control', href: '/' }}
       onFollow={(event) => {
         if (!event.detail.external) {
           event.preventDefault();
@@ -39,14 +39,14 @@ const Sidebar = () => {
         },
         {
           type: 'link',
-          text: 'My MiniPuppers',
-          href: '/my-minipuppers',
+          text: 'IoT Devices',
+          href: '/iot-devices',
         },
-        {
-          type: 'link',
-          text: 'Fleet Control',
-          href: '/minipupper-fleet-control',
-        },
+        // {
+        //   type: 'link',
+        //   text: 'Fleet Control',
+        //   href: '/mpc-devices-fleet-control',
+        // },
         {
           type: 'section',
           text: 'Getting Started',
@@ -54,7 +54,7 @@ const Sidebar = () => {
           items: [
             {
               type: 'link',
-              text: 'About MiniPupper Control',
+              text: 'About Mini Pupper Control',
               href: '/getting-started',
             },
             // { type: 'link', text: 'Setup Guide', href: '/setup-guide' },
