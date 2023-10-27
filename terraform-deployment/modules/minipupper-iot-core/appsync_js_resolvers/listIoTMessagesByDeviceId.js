@@ -25,7 +25,7 @@ export function request(ctx) {
   const { limit = 1000, nextToken, DeviceId } = ctx.arguments;
   return ddb.query({
     index: 'DeviceIdIndex',
-    // var.micd_global_secondary_index_name
+    // var.iot_global_secondary_index_name
     query: { DeviceId: { eq: DeviceId } },
     limit,
     nextToken,
