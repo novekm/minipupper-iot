@@ -4,8 +4,8 @@
 .vscode/
 .vscode/*
 
-ESP8266_AWS_IOT/
-ESP8266_AWS_IOT/*
+MP_AWS_IOT/
+MP_AWS_IOT/*
 M5STICKCPLUS_AWS_IOT/
 M5STICKCPLUS_AWS_IOT/*
 # Local .terraform directories
