@@ -1,6 +1,6 @@
 {
-  "name": "mpc-web-app",
-  "description": "Web app to control Mini Pupper robot dogs.",
+  "name": "minipupper-control-app",
+  "description": "Mini Pupper Control App",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -26,7 +26,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
-    "sass": "^1.54.8"
+    "sass": "^1.54.8",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",

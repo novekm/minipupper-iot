@@ -1,5 +1,7 @@
+<!-- TODO - UPDATE THIS TO BE DOCS FOR MICD APP -->
+
 <!-- TODO - Update screenshots that say TCA, add GitHub instructions -->
-# MiniPupper Control App Documentation (WIP)
+# Bittle Control App Documentation (WIP)
 ### Created by [Kevon Mayers](https://www.linkedin.com/in/kevonmayers)
 ![image info](/resources/app-screenshots/bc-dashboard-page.png)
 ## Introduction
@@ -149,7 +151,7 @@ You also may want to separate your backend and frontend into different repositor
 ![image info](/resources/app-screenshots/bc_amplify_app_cognito_change_password_blank.png)
 7. Set a new password that conforms to the password policy
 ![image info](/resources/app-screenshots/bc_amplify_app_change_password.png)
-8. Upon clicking **`Change Password`** you should be signed in and redirected to the MiniPupper Control Amplify App Dashboard Page.
+8. Upon clicking **`Change Password`** you should be signed in and redirected to the Bittle Control Amplify App Dashboard Page.
 ![image info](/resources/app-screenshots/bc_amplify_app_dashboard.png)
 9. To test the pipeline, head to the **``Data Uploader``** page
 ![image info](/resources/app-screenshots/bc_amplify_app_data_uploader_page.png)

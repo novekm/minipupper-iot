@@ -75,7 +75,7 @@ const Content = () => {
                     {/* Click <Link to={{ pathname: "/about-carbonlake"}}  target="_blank">here</Link> to learn more. */}
                     <br />
                     <br />
-                    Click <a href="/bc-101">here</a> to find your way back home.
+                    Click <a href="/">here</a> to find your way back home.
                   </span>
                 </Box>
               </div>
@@ -107,14 +107,20 @@ export const ToolsContent = () => (
           </li>
           <li>
             <ExternalLinkItem
-              href="https://github.com/novekm/minipupper-iot"
-              text="MiniPupper IoT Park GitHub Repo"
+              href="https://github.com/novekm/iot-puppy-park"
+              text="IoT Puppy Park GitHub Repo"
             />
           </li>
           <li>
             <ExternalLinkItem
-              href="https://mangdang.store/"
-              text="Mini Pupper"
+              href="https://www.petoi.com/pages/bittle-open-source-bionic-robot-dog"
+              text="Petoi Bittle"
+            />
+          </li>
+          <li>
+            <ExternalLinkItem
+              href="https://www.petoi.camp/forum/"
+              text="Petoi Forum"
             />
           </li>
         </ul>
@@ -123,7 +129,7 @@ export const ToolsContent = () => (
   >
     {/* TODO - Change href to /dashboard page once it is created */}
     <p>
-      You've reached this page by mistake. <a href="/bc-101">Click here</a> to
+      You've reached this page by mistake. <a href="/dashboard">Click here</a> to
       go home.
     </p>
   </HelpPanel>

@@ -1,5 +1,5 @@
-// // import React from 'react';
-// // import { Link, StatusIndicator } from '@cloudscape-design/components';
+// import React from 'react';
+// import { Link, StatusIndicator } from '@cloudscape-design/components';
 
 // // ** Labels for the columns in the table **
 // // id - used for showing/hiding columns. Should match sortingField
@@ -11,25 +11,41 @@
 //   {
 //     id: 'name',
 //     header: 'Name',
-//     cell: (item) => item.name,
+//     cell: item => item.name,
 //     minWidth: '180px',
-//     sortingField: 'name',
+//     sortingField: 'name'
 //   },
 //   {
 //     id: 'type',
-//     cell: (item) => item.type,
+//     cell: item => item.type,
 //     header: 'Type',
 //     minWidth: '160px',
-//     sortingField: 'type',
+//     sortingField: 'type'
 //   },
 //   {
 //     id: 'size',
 //     header: 'Size',
-//     cell: (item) => item.size,
+//     cell: item => item.size,
 //     minWidth: '100px',
 //     maxWidth: '200px',
-//     sortingField: ' size',
+//     sortingField: 'size'
 //   },
+//   // {
+//   //   id: 'status',
+//   //   header: 'Status',
+//   //   cell: item => item.status,
+//   //   minWidth: '100px',
+//   //   maxWidth: '200px',
+//   //   sortingField: 'status'
+//   // },
+//   // {
+//   //   id: 'error',
+//   //   header: 'Error',
+//   //   cell: item => item.error,
+//   //   minWidth: '100px',
+//   //   maxWidth: '200px',
+//   //   sortingField: 'error'
+//   // },
 // ];
 
 // // ** Selector options visible when clicking gear icon in table. Used to show/hide columns **
@@ -43,8 +59,10 @@
 //       { id: 'name', label: 'Name', editable: false },
 //       { id: 'type', label: 'Type', editable: true },
 //       { id: 'size', label: 'Size', editable: true },
-//     ],
-//   },
+//       // { id: 'status', label: 'Status', editable: false },
+
+//     ]
+//   }
 // ];
 
 // // ** Page selector options for how many rows to see on each page **
@@ -58,17 +76,20 @@
 // ];
 
 // // Custom options for how to view the table (cards or table)
-// export const CUSTOM_PREFERENCE_OPTIONS = [
-//   { value: 'table', label: 'Table' },
-//   { value: 'cards', label: 'Cards' },
-// ];
+// export const CUSTOM_PREFERENCE_OPTIONS = [{ value: 'table', label: 'Table' }, { value: 'cards', label: 'Cards' }];
 
 // // ** Default preferences for table **
 // // pageSize - how many rows on each page
 // // visibleContent - which rows are visible on component render (page load)
 // export const DEFAULT_PREFERENCES = {
 //   pageSize: 30,
-//   visibleContent: ['name', 'type', 'size'],
+//   visibleContent:
+//   ['name',
+//   'type',
+//   'size',
+//   // 'status',
+//   // 'error'
+// ],
 //   wraplines: false,
-//   custom: CUSTOM_PREFERENCE_OPTIONS[0].value,
+//   custom: CUSTOM_PREFERENCE_OPTIONS[0].value
 // };
