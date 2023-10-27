@@ -1,6 +1,8 @@
 # RoboPupper: Connected Worker Safety with Robots and Terraform! 🐶🐾
-#### Created by:
-[Kevon Mayers](https://www.linkedin.com/in/kevonmayers)
+#### Core Contributors:
+**[Kevon Mayers](https://www.linkedin.com/in/kevonmayers)**: Project Lead, Terraform deployment & Full Stack Web App
+
+**[Adam (Spidey) Purdie](https://www.linkedin.com/in/adampurdie/)** - Mini Pupper Development, MQTT to ROS bridge development
 
 ![Terraform + AWS + Mini Pupper Logo](resources/aws-terraform-minipupper.png)
 

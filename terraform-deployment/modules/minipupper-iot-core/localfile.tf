@@ -1,41 +1,36 @@
-// Mini Puppers
-# resource "local_file" "device_certificate_minipupper" {
-#   for_each = var.all_minipuppers == null ? {} : var.all_minipuppers
-#   filename = "${path.root}/MP_AWS_IOT/${each.value.name}/${each.value.name}-device-certificate.pem"
-#   content  = aws_iot_certificate.cert_minipuppers[each.key].certificate_pem
-# }
-# resource "local_file" "private_key_minipupper" {
-#   for_each = var.all_minipupper == null ? {} : var.all_minipuppers
-#   filename = "${path.root}/MP_AWS_IOT/${each.value.name}/${each.value.name}-private-key.pem.key"
-#   content  = aws_iot_certificate.cert_minipuppers[each.key].private_key
-# }
-# resource "local_file" "public_key_minipupper" {
-#   for_each = var.all_minipuppers == null ? {} : var.all_minipuppers
-#   filename = "${path.root}/MP_AWS_IOT/${each.value.name}/${each.value.name}-public-key.pem.key"
-#   content  = aws_iot_certificate.cert_minipuppers[each.key].public_key
-# }
+// - Mini Puppers -
+resource "local_file" "device_certificate_minipupper" {
+  for_each = var.mpc_minipuppers == null ? {} : var.mpc_minipuppers
+  filename = "${path.root}/MP_AWS_IOT/${each.value.name}/${each.value.name}-device-certificate.pem"
+  content  = aws_iot_certificate.cert_minipuppers[each.key].certificate_pem
+}
+resource "local_file" "private_key_minipupper" {
+  for_each = var.mpc_minipuppers == null ? {} : var.mpc_minipuppers
+  filename = "${path.root}/MP_AWS_IOT/${each.value.name}/${each.value.name}-private-key.pem.key"
+  content  = aws_iot_certificate.cert_minipuppers[each.key].private_key
+}
+resource "local_file" "public_key_minipupper" {
+  for_each = var.mpc_minipuppers == null ? {} : var.mpc_minipuppers
+  filename = "${path.root}/MP_AWS_IOT/${each.value.name}/${each.value.name}-public-key.pem.key"
+  content  = aws_iot_certificate.cert_minipuppers[each.key].public_key
+}
 
-// Gas Sensors
-resource "local_file" "device_certificate_gas_sensor" {
-  for_each = var.all_gas_sensors == null ? {} : var.all_gas_sensors
-  filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/${each.value.name}-device-certificate.pem"
-  content  = aws_iot_certificate.cert_gas_sensors[each.key].certificate_pem
+#  TODO - Docker Compose File for Mini Pupper (will be uploaded to pre-existing S3 bucket)
+# Existing Mini Pupper (At AWS Workshop)
+resource "local_file" "docker_compose_existing_minipupper" {
+  count    = var.lookup_existing_minipuppers_ssm_parameters ? 1 : 0
+  filename = "${path.root}/MP_AWS_IOT/existing-minipuper/docker-compose.yaml"
+  content  = <<-EOF
+    # TODO - Add code for Docker Compose File HERE
+    AWS_IOT_ENDPOINT        "${data.aws_iot_endpoint.current.endpoint_address}"
+  EOF
 }
-resource "local_file" "private_key_gas_sensor" {
-  for_each = var.all_gas_sensors == null ? {} : var.all_gas_sensors
-  filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/${each.value.name}-private-key.pem.key"
-  content  = aws_iot_certificate.cert_gas_sensors[each.key].private_key
-}
-resource "local_file" "public_key_gas_sensor" {
-  for_each = var.all_gas_sensors == null ? {} : var.all_gas_sensors
-  filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/${each.value.name}-public-key.pem.key"
-  content  = aws_iot_certificate.cert_gas_sensors[each.key].public_key
-}
+
 
 
 // minipuppers
 # resource "local_file" "dynamic_secrets_h_minipupper" {
-#   for_each = var.all_minipuppers == null ? {} : var.all_minipuppers
+#   for_each = var.mpc_minipuppers == null ? {} : var.mpc_minipuppers
 #   filename = "${path.root}/ESP8266_AWS_IOT/${each.value.name}/MiniPupperIoTCommands-${each.value.name}/Secrets-${each.value.name}.h"
 #   content  = <<-EOF
 #   #include <pgmspace.h>
@@ -337,9 +332,27 @@ resource "local_file" "public_key_gas_sensor" {
 
 # }
 
-// Gas Sensors
+
+// Gas Sensors - Certs/Keys
+resource "local_file" "device_certificate_gas_sensor" {
+  for_each = var.mpc_gas_sensors == null ? {} : var.mpc_gas_sensors
+  filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/${each.value.name}-device-certificate.pem"
+  content  = aws_iot_certificate.cert_gas_sensors[each.key].certificate_pem
+}
+resource "local_file" "private_key_gas_sensor" {
+  for_each = var.mpc_gas_sensors == null ? {} : var.mpc_gas_sensors
+  filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/${each.value.name}-private-key.pem.key"
+  content  = aws_iot_certificate.cert_gas_sensors[each.key].private_key
+}
+resource "local_file" "public_key_gas_sensor" {
+  for_each = var.mpc_gas_sensors == null ? {} : var.mpc_gas_sensors
+  filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/${each.value.name}-public-key.pem.key"
+  content  = aws_iot_certificate.cert_gas_sensors[each.key].public_key
+}
+
+// Gas Sensors - secrets.h file
 resource "local_file" "dynamic_secrets_h_gas_sensors" {
-  for_each = var.all_gas_sensors == null ? {} : var.all_gas_sensors
+  for_each = var.mpc_gas_sensors == null ? {} : var.mpc_gas_sensors
   filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/GasSensorIoT-${each.value.name}/Secrets-${each.value.name}.h"
   content  = <<-EOF
   #include <pgmspace.h>
@@ -350,15 +363,15 @@ resource "local_file" "dynamic_secrets_h_gas_sensors" {
 
   #define AWS_IOT_ENDPOINT        "${data.aws_iot_endpoint.current.endpoint_address}"
 
-  #define MINIPUPPER_PUB_TOPIC        "MP1/pub"
+  #define MINIPUPPER_PUB_TOPIC        "device/${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}/do"
   #define MINIPUPPER_SUB_TOPIC        "MP1/sub"
   #define MINIPUPPER_ACTION_SELF      "khi"
 
-  #define MINIPUPPER_GLOBAL_PUB_TOPIC "MP-global/pub"
-  #define MINIPUPPER_GLOBAL_SUB_TOPIC "MP-global/sub"
-  #define MINIPUPPER_ACTION_GLOBAL    "kck"
+  #define MINIPUPPER_GLOBAL_PUB_TOPIC "MP-global/data"
+  #define MINIPUPPER_GLOBAL_SUB_TOPIC "MP-global/data"
+  #define MINIPUPPER_ACTION_GLOBAL    "kck" // TODO - Use Arduino JSON and make this 'Look around'
 
-  #define DATA_PUB_TOPIC          "${each.value.name}/pub"
+  #define DATA_PUB_TOPIC          "${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}/do"
   #define DATA_SUB_TOPIC          "${each.value.name}/sub"
   #define SHADOW_GET_PUB_TOPIC    "$aws/things/${each.value.name}/shadow/name/State/get"
   #define SHADOW_GET_SUB_TOPIC    "$aws/things/${each.value.name}/shadow/name/State/get/accepted"
@@ -428,8 +441,10 @@ akcjMS9cmvqtmg5iUaQqqcT5NJ0hGA==
   EOF
 
 }
+
+# Gas Sensors .ino file
 resource "local_file" "dynamic_ino_gas_sensors" {
-  for_each = var.all_gas_sensors == null ? {} : var.all_gas_sensors
+  for_each = var.mpc_gas_sensors == null ? {} : var.mpc_gas_sensors
   filename = "${path.root}/M5STICKCPLUS_AWS_IOT/${each.value.name}/GasSensorIoT-${each.value.name}/GasSensorIoT-${each.value.name}.ino"
   # content  = aws_iot_certificate.cert.public_key
   content = <<-EOF

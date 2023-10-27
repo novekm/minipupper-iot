@@ -1,6 +1,6 @@
 export const resourcesBreadcrumbs = [
   {
-    text: 'MiniPupper Control',
+    text: 'MPC App',
     href: '/dashboard',
   },
   {

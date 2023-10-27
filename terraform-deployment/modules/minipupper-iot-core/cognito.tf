@@ -1,3 +1,4 @@
+# TODO - Consider using for_each meta argument and for loops to make this more dynamic
 # - USER POOL -
 resource "aws_cognito_user_pool" "mpc_user_pool" {
   name = var.mpc_user_pool_name

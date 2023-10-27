@@ -104,28 +104,6 @@ data "aws_iam_policy_document" "mpc_cognito_standard_group_trust_relationship" {
     }
   }
 }
-
-
-# Eventbridge Trust Relationship
-data "aws_iam_policy_document" "mpc_eventbridge_trust_relationship" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["events.amazonaws.com"]
-    }
-  }
-}
-# Step Function Trust Relationship
-data "aws_iam_policy_document" "mpc_step_function_trust_relationship" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["states.amazonaws.com", ]
-    }
-  }
-}
 # AppSync Trust Relationship
 data "aws_iam_policy_document" "mpc_appsync_trust_relationship" {
   statement {
@@ -137,68 +115,45 @@ data "aws_iam_policy_document" "mpc_appsync_trust_relationship" {
     }
   }
 }
-
-
-# Ampclify Trust Relationship
-data "aws_iam_policy_document" "mpc_ampclify_trust_relationship" {
+# Amplify Trust Relationship
+data "aws_iam_policy_document" "mpc_amplify_trust_relationship" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
-      identifiers = ["ampclify.amazonaws.com"]
+      identifiers = ["amplify.amazonaws.com"]
+    }
+  }
+}
+# IoT Trust Relationship
+data "aws_iam_policy_document" "mpc_iot_trust_relationship" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["iot.amazonaws.com"]
     }
   }
 }
 
-
 # --- CUSTOMER MANAGED POLICIES (RESTRICTED ACCESS) ---
 # - IoT Policies -
-# IoT Customer Managed Policy (All Actions)
-# data "aws_iam_policy_document" "mpc_iot_restricted_access_policy" {
-#   count = var.create_restricted_access_roles ? 1 : 0
-#   # description = "Policy granting full DynamoDB permissions for the mpc_devices DynamoDB table."
-#   statement {
-#     effect  = "Allow"
-#     actions = ["iot:Connect", "iot:Publish", "iot:Subscribe", "iot:Receive"]
-#     resources = [
-#       "*",
-#     ]
-#   }
-# }
-# resource "aws_iam_policy" "mpc_iot_restricted_access_policy" {
-#   count       = var.create_restricted_access_roles ? 1 : 0
-#   name        = "mpc_ioy_restricted_access_policy"
-#   description = "Policy granting necessary IoT permissions fleet management of Mini Puppers via Mini Pupper Control App."
-#   policy      = data.aws_iam_policy_document.mpc_iot_restricted_access_policy[0].json
-
-# }
-# - S3 Policies-
-# S3 Customer Managed Policy (Restricted Access) - Admin
-# data "aws_iam_policy_document" "mpc_s3_restricted_access_policy" {
-#   count = var.create_restricted_access_roles ? 1 : 0
-#   statement {
-#     effect  = "Allow"
-#     actions = ["s3:*"]
-#     # Allows all S3 operations for files matching the below suffixes
-#     resources = [
-#       "${aws_s3_bucket.mpc_landing_bucket.arn}",
-#       "${aws_s3_bucket.mpc_landing_bucket.arn}/*",
-#       "${aws_s3_bucket.mpc_input_bucket.arn}",
-#       "${aws_s3_bucket.mpc_input_bucket.arn}/*",
-#       "${aws_s3_bucket.mpc_devices_bucket.arn}",
-#       "${aws_s3_bucket.mpc_devices_bucket.arn}/*",
-#       "${aws_s3_bucket.mpc_app_storage_bucket.arn}",
-#       "${aws_s3_bucket.mpc_app_storage_bucket.arn}/*",
-#     ]
-#   }
-# }
-# resource "aws_iam_policy" "mpc_s3_restricted_access_policy" {
-#   count  = var.create_restricted_access_roles ? 1 : 0
-#   name   = "mpc_s3_restricted_access_policy"
-#   policy = data.aws_iam_policy_document.mpc_s3_restricted_access_policy[0].json
-# }
-
+# Policy to AWS IoT Rule to PutItem in MPC MQTT DynamoDB Table
+data "aws_iam_policy_document" "mpc_iot_to_dynamodb_restricted_access_policy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["dynamodb:PutItem"]
+    resources = [aws_dynamodb_table.mpc_devices_mqtt.arn]
+  }
+}
+resource "aws_iam_policy" "mpc_iot_to_dynamodb_restricted_access_policy" {
+  count       = var.create_restricted_access_roles ? 1 : 0
+  name        = "mpc_iot_to_dynamodb_restricted_access_policy"
+  description = "Policy granting DynamoDB 'PutItem' access for the mpc_devices_mqtt DynamoDB table."
+  policy      = data.aws_iam_policy_document.mpc_iot_to_dynamodb_restricted_access_policy.json
+}
 # - DynamoDB Policies -
 # DynamoDB Customer Managed Policy (All Actions)
 data "aws_iam_policy_document" "mpc_dynamodb_restricted_access_policy" {
@@ -208,7 +163,8 @@ data "aws_iam_policy_document" "mpc_dynamodb_restricted_access_policy" {
     effect  = "Allow"
     actions = ["dynamodb:*"]
     resources = [
-      "${aws_dynamodb_table.mpc_devices.arn}",
+      # "${aws_dynamodb_table.mpc_devices.arn}",
+      "*",
     ]
   }
 }
@@ -217,6 +173,26 @@ resource "aws_iam_policy" "mpc_dynamodb_restricted_access_policy" {
   name        = "mpc_dynamodb_restricted_access_policy"
   description = "Policy granting full DynamoDB permissions for the mpc_devices DynamoDB table."
   policy      = data.aws_iam_policy_document.mpc_dynamodb_restricted_access_policy[0].json
+
+}
+
+data "aws_iam_policy_document" "mpc_mqtt_dynamodb_restricted_access_policy" {
+  count = var.create_restricted_access_roles ? 1 : 0
+  # description = "Policy granting full DynamoDB permissions for the mpc_devices DynamoDB table."
+  statement {
+    effect  = "Allow"
+    actions = ["dynamodb:*"]
+    resources = [
+      # "${aws_dynamodb_table.mpc_devices_mqtt.arn}",
+      "*",
+    ]
+  }
+}
+resource "aws_iam_policy" "mpc_mqtt_dynamodb_restricted_access_policy" {
+  count       = var.create_restricted_access_roles ? 1 : 0
+  name        = "mpc_mqtt_dynamodb_restricted_access_policy"
+  description = "Policy granting full DynamoDB permissions for the mpc_devices_mqtt DynamoDB table."
+  policy      = data.aws_iam_policy_document.mpc_mqtt_dynamodb_restricted_access_policy[0].json
 
 }
 
@@ -232,7 +208,8 @@ data "aws_iam_policy_document" "mpc_dynamodb_restricted_access_read_only_policy"
       "dynamodb:Query",
     ]
     resources = [
-      "${aws_dynamodb_table.mpc_devices.arn}",
+      # "${aws_dynamodb_table.mpc_devices.arn}",
+      "*",
     ]
   }
 }
@@ -243,98 +220,6 @@ resource "aws_iam_policy" "mpc_dynamodb_restricted_access_read_only_policy" {
   policy      = data.aws_iam_policy_document.mpc_dynamodb_restricted_access_read_only_policy[0].json
 
 }
-
-# - SSM Policies -
-# # SSM Customer Managed Policy (Restricted Access)
-# data "aws_iam_policy_document" "mpc_ssm_restricted_access_policy" {
-#   count = var.create_restricted_access_roles ? 1 : 0
-#   # description = "Policy granting full DynamoDB permissions for the mpc_devices DynamoDB table."
-#   statement {
-#     effect = "Allow"
-#     actions = [
-#       "ssm:DescribeParameters",
-#     ]
-#     resources = [
-#       # "${aws_ssm_parameter.mpc_input_bucket_name.arn}",
-#       # "${aws_ssm_parameter.mpc_devices_bucket_name.arn}",
-#       # "${aws_ssm_parameter.mpc_app_storage_bucket_name.arn}",
-#       "${aws_ssm_parameter.mpc_dynamodb_output_table_name.arn}",
-#     ]
-#   }
-# }
-# resource "aws_iam_policy" "mpc_ssm_restricted_access_policy" {
-#   count  = var.create_restricted_access_roles ? 1 : 0
-#   name   = "mpc_ssm_restricted_access_policy"
-#   policy = data.aws_iam_policy_document.mpc_ssm_restricted_access_policy[0].json
-
-# }
-
-# - Lambda Policies -
-# Lambda Invoke Step Functions Customer Managed Policy (Restricted Access)
-# Allows Lambda function to invoke Step Function State machine
-# data "aws_iam_policy_document" "mpc_lambda_invoke_sfn_state_machine_restricted_access_policy" {
-#   count = var.create_restricted_access_roles ? 1 : 0
-#   # description = "Policy granting full DynamoDB permissions for the mpc_devices DynamoDB table."
-#   statement {
-#     effect = "Allow"
-#     actions = [
-#       "states:*",
-#     ]
-#     resources = [
-#       "${aws_sfn_state_machine.mpc_sfn_state_machine.arn}",
-#     ]
-#   }
-# }
-# resource "aws_iam_policy" "mpc_lambda_invoke_sfn_state_machine_restricted_access_policy" {
-#   count  = var.create_restricted_access_roles ? 1 : 0
-#   name   = "mpc_lambda_invoke_sfn_state_machine_restricted_access_policy"
-#   policy = data.aws_iam_policy_document.mpc_lambda_invoke_sfn_state_machine_restricted_access_policy[0].json
-# }
-
-
-
-# - Eventbridge Policies -
-# Eventbridge Invoke Custom TCA Event Bus Customer Managed Policy (Restricted Access)
-
-# data "aws_iam_policy_document" "mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access_policy" {
-#   count = var.create_restricted_access_roles ? 1 : 0
-#   # description = "Policy granting full DynamoDB permissions for the mpc_devices DynamoDB table."
-#   statement {
-#     effect = "Allow"
-#     actions = [
-#       "events:PutEvents",
-#     ]
-#     resources = [
-#       "${aws_cloudwatch_event_bus.mpc_event_bus.arn}",
-#     ]
-#   }
-# }
-# resource "aws_iam_policy" "mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access_policy" {
-#   count  = var.create_restricted_access_roles ? 1 : 0
-#   name   = "mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access_policy"
-#   policy = data.aws_iam_policy_document.mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access_policy[0].json
-# }
-
-# Eventbridge Invoke Step Functions Customer Managed Policy (Restricted Access)
-# Allows EventBridge to invoke Step Function State machine
-# data "aws_iam_policy_document" "mpc_eventbridge_invoke_sfn_state_machine_restricted_access_policy" {
-#   count = var.create_restricted_access_roles ? 1 : 0
-#   statement {
-#     effect = "Allow"
-#     actions = [
-#       "states:*",
-#     ]
-#     resources = [
-#       "${aws_sfn_state_machine.mpc_sfn_state_machine.arn}",
-#     ]
-#   }
-# }
-# resource "aws_iam_policy" "mpc_eventbridge_invoke_sfn_state_machine_restricted_access_policy" {
-#   count  = var.create_restricted_access_roles ? 1 : 0
-#   name   = "mpc_eventbridge_invoke_sfn_state_machine_restricted_access_policy"
-#   policy = data.aws_iam_policy_document.mpc_eventbridge_invoke_sfn_state_machine_restricted_access_policy[0].json
-# }
-
 
 # --- IAM ROLES ---
 # - Cognito Roles -
@@ -401,6 +286,7 @@ resource "aws_iam_role" "mpc_cognito_admin_group_restricted_access" {
     "arn:aws:iam::aws:policy/AWSIoTDataAccess",
     # aws_iam_policy.mpc_s3_restricted_access_policy[0].arn,
     aws_iam_policy.mpc_dynamodb_restricted_access_policy[0].arn,
+    aws_iam_policy.mpc_mqtt_dynamodb_restricted_access_policy[0].arn,
     # aws_iam_policy.mpc_iot_restricted_access_policy[0].arn,
   ]
   max_session_duration  = "43200" // duration in seconds
@@ -449,6 +335,7 @@ resource "aws_iam_role" "mpc_appsync_dynamodb_restricted_access" {
   # Managed Policies
   managed_policy_arns = [
     aws_iam_policy.mpc_dynamodb_restricted_access_policy[0].arn,
+    aws_iam_policy.mpc_mqtt_dynamodb_restricted_access_policy[0].arn,
     # aws_iam_policy.mpc_ssm_restricted_access_policy[0].arn,
     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
   ]
@@ -462,98 +349,27 @@ resource "aws_iam_role" "mpc_appsync_dynamodb_restricted_access" {
   )
 }
 
-# - Eventbridge Roles -
 
-# Eventbrige Invoke Step Functions Restricted Access
-# Role granting Eventbridge S3 restricted access, SSM restricted read-only access, and the ablity to access to CloudWatch Logs.
-# Role allows Eventbridge to invoke step functions
-# resource "aws_iam_role" "mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access" {
-#   # Conditional create of the role - default is 'TRUE'
-#   count              = var.create_restricted_access_roles ? 1 : 0
-#   name               = "mpc_eventbridge_invoke_custom_event_bus_restricted_access"
-#   assume_role_policy = data.aws_iam_policy_document.mpc_eventbridge_trust_relationship.json
-#   # Managed Policies
-#   managed_policy_arns = [
-#     aws_iam_policy.mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access_policy[0].arn,
-#     # aws_iam_policy.mpc_s3_restricted_access_policy[0].arn,
-#     # aws_iam_policy.mpc_ssm_restricted_access_policy[0].arn,
-#     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-#   ]
+# - IoT Roles -
+# IoT Restricted Access Role
+# Role granting IoT DynamoDB restricted access (PutItem).
+resource "aws_iam_role" "mpc_iot_to_dynamodb_restricted_access" {
+  # Conditional create of the role - default is 'TRUE'
+  count              = var.create_restricted_access_roles ? 1 : 0
+  name               = "mpc_iot_to_dynamodb_restricted_access"
+  assume_role_policy = data.aws_iam_policy_document.mpc_iot_trust_relationship.json
+  managed_policy_arns = [
+    aws_iam_policy.mpc_iot_to_dynamodb_restricted_access_policy[0].arn
+  ]
+}
 
-#   force_detach_policies = true
-#   path                  = "/${var.mpc_app_name}/"
 
-#   tags = merge(
-#     {
-#       "AppName" = var.mpc_app_name
-#     },
-#     var.tags,
-#   )
-# }
-# Eventbrige Invoke Step Functions Restricted Access
-# Role granting Eventbridge S3 restricted access, SSM restricted read-only access, and the ablity to access to CloudWatch Logs.
-# Role allows Eventbridge to invoke step functions
-# resource "aws_iam_role" "mpc_eventbridge_invoke_sfn_state_machine_restricted_access" {
-#   # Conditional create of the role - default is 'TRUE'
-#   count              = var.create_restricted_access_roles ? 1 : 0
-#   name               = "mpc_eventbridge_invoke_sfn_state_machine_restricted_access"
-#   assume_role_policy = data.aws_iam_policy_document.mpc_eventbridge_trust_relationship.json
-#   # Managed Policies
-#   managed_policy_arns = [
-#     # aws_iam_policy.mpc_eventbridge_invoke_sfn_state_machine_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_s3_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_ssm_restricted_access_policy[0].arn,
-#     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-#   ]
-
-#   force_detach_policies = true
-#   path                  = "/${var.mpc_app_name}/"
-
-#   tags = merge(
-#     {
-#       "AppName" = var.mpc_app_name
-#     },
-#     var.tags,
-#   )
-# }
-
-# - Step Function Roles -
-# Step Functions Master Role Restricted Access
-# Role granting Step Functions S3 restricted access, SSM restricted read-only access,
-# DynamoDB restricted access, and the ablity to access to CloudWatch Logs.
-# Role allows Step Function to invoke lambda functions
-# resource "aws_iam_role" "mpc_step_functions_master_restricted_access" {
-#   # Conditional create of the role - default is 'TRUE'
-#   count              = var.create_restricted_access_roles ? 1 : 0
-#   name               = "mpc_step_functions_master_restricted_access"
-#   description        = "Master step function role that grants S3 restricted access, SSM restricted access, DynamoDB restricted access as well as CloudWatch full access. "
-#   assume_role_policy = data.aws_iam_policy_document.mpc_step_function_trust_relationship.json
-#   # Managed Policies
-#   managed_policy_arns = [
-#     aws_iam_policy.mpc_s3_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_ssm_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_dynamodb_restricted_access_policy[0].arn,
-#     "arn:aws:iam::aws:policy/AmazonSNSFullAccess",
-#     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-#   ]
-
-#   force_detach_policies = true
-#   path                  = "/${var.mpc_app_name}/"
-
-#   tags = merge(
-#     {
-#       "AppName" = var.mpc_app_name
-#     },
-#     var.tags,
-#   )
-# }
-
-# Ampclify
+# Amplify
 
 resource "aws_iam_role" "mpc_amplify_codecommit" {
   count               = var.mpc_create_codecommit_repo ? 1 : 0
   name                = "mpc_amplify_codecommit"
-  assume_role_policy  = data.aws_iam_policy_document.mpc_ampclify_trust_relationship.json
+  assume_role_policy  = data.aws_iam_policy_document.mpc_amplify_trust_relationship.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/AWSCodeCommitReadOnly"]
 }
 
@@ -571,7 +387,6 @@ resource "aws_iam_user" "mpc_gitlab_mirroring" {
     var.tags,
   )
 }
-
 resource "aws_iam_user_policy" "mpc_gitlab_mirroring_policy" {
   count = var.mpc_enable_gitlab_mirroring ? 1 : 0
   name  = var.mpc_gitlab_mirroring_policy_name

@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 /** **********************************************************************
                             DISCLAIMER
 
@@ -31,7 +30,8 @@ import '../../common/styles/servicehomepage.scss';
 
 // Import images
 import awsLogo from '../../public/images/AWS_logo_RGB_REV.png';
-import mpcBasicArch from '../../../../resources/architecture/rob301-reinvent-workshop-arch-ROB301_BASIC_ARCH.png';
+import mpcBasicArch from '../../../../resources/architecture/MPC_BASIC_ARCH.png';
+import mpcBasicArchWithKey from '../../../../resources/architecture/MPC_BASIC_ARCH_WITH_KEY.png';
 
 const GettingStarted = () => {
   return (
@@ -64,7 +64,7 @@ const Content = () => {
               />
               <div className="custom-home__header-title">
                 <Box fontSize="display-l" fontWeight="bold" color="inherit">
-                  MiniPupper Control
+                  Mini Pupper Control
                 </Box>
                 <Box
                   fontSize="display-l"
@@ -72,14 +72,12 @@ const Content = () => {
                   fontWeight="light"
                   color="inherit"
                 >
-                  Control your fleet of MiniPupper robot dogs at scale.
+                  Improving worker safety, with a robotic puppy.
                 </Box>
                 <Box fontWeight="light">
                   <span className="custom-home__header-sub-title">
-                    This project serves as an example of how you can use AWS IoT
-                    Core (and other services) to control and manage a fleet of
-                    Mini Puppers.
-                    {/* Click <Link to={{ pathname: "/about-carbonlake"}}  target="_blank">here</Link> to learn more. */}
+                    This solution serves as an example of how you can use AWS IoT
+                    Core (and other services) to build a connected worker safety solution with Mini Pupper 2 robots, and an ESP32.
                     <br />
                     <br />
                     Click{' '}
@@ -102,40 +100,26 @@ const Content = () => {
         <Box margin="xxl" padding="l">
           <SpaceBetween size="l">
             <div>
-              <h1>About MiniPupper Control</h1>
+              <h1>About Mini Pupper Control</h1>
               <Container>
                 <div>
                   <p>
-                    This solution serves as an example of how you can use AWS
-                    IoT Core (and other services) to control and manage a fleet
-                    of Mini Puppers through a web application. <br />
-                    The solution was built by a team of AWS Solutions Architects
-                    in the{' '}
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://aws.amazon.com/energy/"
-                    >
-                      Energy & Utilities team.
-                    </a>
-                    <br />
-                    <br />
-                    This project provides the following:
+                    This solution serves as an example of how you can use AWS IoT
+                    Core (and other services) to build a connected worker safety solution with Mini Pupper 2 robots, and an ESP32. When a simulated toxin is detected by the Gas Sensor (M5StickC-Plus), the Mini Pupper will respond. You can also issue commands to the Mini Pupper via the details page for each specific device.
+
                   </p>
-                  <li>MiniPupper Control AWS Amplify Application</li>
-                  <li>MiniPupper Control GraphQL API</li>
-                  <li>IoT Connectivity</li>
-                  {/* <li>Realtime Video Streaming</li> */}
-                  {/* <li>Computer Vision</li> */}
-                  {/* <li>Amazon Alexa Integration</li> */}
-                  <li>Authentication, Authorization, and Auditing</li>
-                  <li>Secure Data Storage</li>
-                  <p>
-                    {/* Data is ingested through the Landing Bucket, and can be
-                    ingested from any service within or connected to the AWS
-                    cloud.
-                    <br /> */}
-                  </p>
+                  <br/>
+                  Core Contributors:
+                  <br />
+                    <li><b>Kevon Mayers:</b> Project Lead, Terraform deployment & Full Stack Web App </li>
+                    <li><b>Adam Purdie:</b> Mini Pupper Development, MQTT to ROS bridge development</li>
+                  <br />
+                    <b>This project provides the following:</b>
+                    <li>Mini Pupper Control custom AWS Amplify Application</li>
+                    <li>Mini Pupper Control AWS AppSync GraphQL API</li>
+                    <li>AWS IoT Connectivity</li>
+                    <li>Dynamic creation of IoT Things, Policies, Permissions, etc. with Terraform</li>
+                    <li>Authentication, Authorization, and Auditing</li>
                 </div>
               </Container>
             </div>
@@ -145,7 +129,8 @@ const Content = () => {
                 {/* Make this flex later. maxWidth is not mobile responsive */}
                 <div>
                   <img
-                    src={mpcBasicArch}
+                    // src={mpcBasicArch}
+                    src={mpcBasicArchWithKey}
                     alt=""
                     style={{ maxWidth: '100%', paddingRight: '2em' }}
                   />
@@ -190,37 +175,18 @@ export const ToolsContent = () => (
           <li>
             <ExternalLinkItem
               href="https://github.com/novekm/minipupper-iot"
-              text="MiniPupper IoT Park GitHub Repo"
-            />
-          </li>
-          <li>
-            <ExternalLinkItem
-              href="https://mangdang.store/"
-              text="Mini Pupper"
+              text="MiniPupper IoT GitHub Repo"
             />
           </li>
         </ul>
       </>
-      /* <li>
-            <ExternalLinkItem
-              href="https://aws.amazon.com/energy/"
-              text="TBD - Amazon TCAQS Blog Post"
-            />
-          </li> */
     }
   >
     <p>
-      This app is meant to serve as an example of an application you can build
-      to control and manage{' '}
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://mangdang.store/"
-      >
-        {' '}
-        Mini Puppers.
-      </a>
-      <span> </span>
+      This solution serves as an example of how you can use AWS IoT
+                    Core (and other services) to build a connected worker safety solution with Mini Pupper 2 robots.
+      <br />
+      <br />
       <span>
         The app is built leveraging AWS Amplify, Cloudscape, Terraform, and the
         AWS Amplify Libraries for JavaScript. For more information, see

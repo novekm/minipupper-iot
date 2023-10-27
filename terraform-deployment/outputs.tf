@@ -1,54 +1,49 @@
-# # AWS Current Region
-# output "aws_current_region" {
-#   value = "AWS Region: ${module.minipupper-iot-core.aws_current_region.name}"
-# }
+#  MODULE OUTPUTS - Only used at AWS Events. These values reference pre-existing
+# SSM Parameter Store values that will exist in the provided AWS account.
+# These outputs are dynamically generated if the following variables are defined in main.tf:
 
-# # S3
-# output "mpc_input_bucket" {
-#   value       = module.minipupper-iot-core.mpc_input_bucket_id.id
-#   description = "The name of the S3 input bucket"
-# }
-# output "mpc_devices_bucket" {
-#   value       = module.minipupper-iot-core.mpc_devices_bucket_id.id
-#   description = "The name of the S3 output bucket"
-# }
-# output "mpc_app_storage_bucket" {
-#   value       = module.minipupper-iot-core.mpc_app_storage_bucket_id.id
-#   description = "The name of the S3 app storage bucket"
-# }
+# lookup_existing_general_ssm_parameters = true
+# lookup_existing_minipuppers_ssm_parameters = true
 
+output "mpc_existing_s3_bucket_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_s3_bucket_ssm
+}
 
+output "mpc_existing_minipupper_thing_name_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_thing_name_ssm
+}
+output "mpc_existing_minipupper_device_id_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_device_id_ssm
+}
 
-# # Ampclify
+output "mpc_existing_minipupper_device_name_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_device_name_ssm
+}
 
-# # Step Function
+output "mpc_existing_minipupper_short_name_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_short_name_ssm
+}
 
-# # IAM
+output "mpc_existing_minipupper_computer_module_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_computer_module_ssm
+}
 
-# # DynamoDB
+output "mpc_existing_minipupper_manfacturer_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_manfacturer_ssm
+}
 
-# # Cognito
-# output "mpc_user_pool_region" {
-#   value = module.minipupper-iot-core.mpc_user_pool_region.name
-# }
-# output "mpc_user_pool_id" {
-#   value = module.minipupper-iot-core.mpc_user_pool_id.id
-# }
-# output "mpc_user_pool_client" {
-#   value = module.minipupper-iot-core.mpc_user_pool_client_id.id
-# }
-# output "mpc_identity_pool" {
-#   value = module.minipupper-iot-core.mpc_identity_pool_id.id
-# }
+output "mpc_existing_minipupper_model_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_model_ssm
+}
 
-# # AppSync (GraphQL)
-# output "mpc_appsync_graphql_api_region" {
-#   value = module.minipupper-iot-core.mpc_appsync_graphql_api_region.name
-# }
-# output "mpc_appsync_graphql_api_id" {
-#   value = module.minipupper-iot-core.mpc_appsync_graphql_api_id.id
-# }
-# output "mpc_appsync_graphql_api_uris" {
-#   value = module.minipupper-iot-core.mpc_appsync_graphql_api_uris.uris
-# }
+output "mpc_existing_minipupper_device_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_device_ssm
+}
 
+output "mpc_existing_minipupper_registered_owner_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_registered_owner_ssm
+}
+
+output "mpc_existing_minipupper_primary_location_ssm" {
+  value = module.minipupper-iot-core.mpc_existing_minipupper_primary_location_ssm
+}

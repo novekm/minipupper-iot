@@ -1,78 +1,85 @@
+// This is a template file for a basic deployment.
 // Modify the parameters below with actual values
 module "minipupper-iot-core" {
   // location of the module - can be local or git repo
   source = "./modules/minipupper-iot-core"
 
-  # - Network information -
-  // note - for added security, eventually these could be values stored in parameter store
-  // however that would require users to manually enter them before deploying the terraform code.
+  # - Network Information -
+  # Note: For added security, eventually these values could be stored in SSM parameter store,
+  # and fetched via SSM Data Sources. However, that would require users to manually enter these
+  # values before running Terraform apply to provision resources.
+  # however that would require users to manually enter them before deploying the Terraform code.
+  # For production workloads, we strongly advise against hardcoding sensitive values.
 
   # Primary WiFi - REQUIRED
   mpc_wifi_ssid_1     = "" // enter SSID for the primary local network you want devices to connect to
-  mpc_wifi_password_1 = "" // enter password for the primary local network you want devices to connect to
-  # Backup 1 - Optional
-  # mpc_wifi_ssid_2     = ""    // enter SSID for the local network you want devices to connect to
-  # mpc_wifi_password_2 = "" // enter password for the local network you want devices to connect to
-  # Backup 2 - Optional
-  # mpc_wifi_ssid_3     = ""    // enter SSID for the local network you want devices to connect to
-  # mpc_wifi_password_3 = "" // enter password for the local network you want devices to connect to
-  # Backup 3 - Optional
-  # mpc_wifi_ssid_4     = ""           // enter SSID for the local network you want devices to connect to
-  # mpc_wifi_password_4 = "" // enter password for the local network you want devices to connect to
+  mpc_wifi_password_1 = "" // enter password for the primary local network you want devices to
 
   # - IoT -
   # Dynamic Creation of IoT Things for Mini Puppers and Gas Sensors
 
-  // Enter an object for each Mini Pupper you would like to connect
-  all_minipuppers = {
-    // no spaces allowed in strings
+  // Enter an object for each Mini Pupper you would like to connect/register
+  mpc_minipuppers = {
     MiniPupper1 : {
-      name            = "MiniPupper1"
-      short_name      = "MP1"
-      computer_module = "RaspberryPi48"
+      // no spaces allowed in strings
+      name             = "MiniPupper1"
+      short_name       = "MP1"
+      computer_module  = "RaspberryPi48"
+      manufacturer     = "Mangdang"
+      model            = "Mini Pupper 2"
+      registered_owner = "John Smith"
+      primary_location = "re:Invent"
     },
     # MiniPupper2 : {
-    #   name            = "MiniPupper2"
-    #   short_name      = "MP2"
-    #   computer_module = "RaspberryPi48"
+    #   name             = "MiniPupper2"
+    #   short_name       = "MP2"
+    #   computer_module  = "RaspberryPi48"
+    #   manufacturer     = "Mangdang"
+    #   model            = "Mini Pupper 2"
+    #   device           = "M5StickCPlus"
+    #   registered_owner = "John Smith"
+    #   primary_location = "re:Invent"
     # },
     # MiniPupper3 : {
-    #   name            = "MiniPupper3"
-    #   short_name      = "MP3"
-    #   computer_module = "RaspberryPi48"
-    # },
-    # MiniPupper4 : {
-    #   name            = "MiniPupper4"
-    #   short_name      = "MP4"
-    #   computer_module = "RaspberryPi48"
-    # },
-    # MiniPupper5 : {
-    #   name            = "MiniPupper5"
-    #   short_name      = "MP5"
-    #   computer_module = "RaspberryPi48"
-    # },
-    # MiniPupper6 : {
-    #   name            = "MiniPupper6"
-    #   short_name      = "MP6"
-    #   computer_module = "RaspberryPi48"
+    #   name             = "MiniPupper3"
+    #   short_name       = "MP3"
+    #   computer_module  = "RaspberryPi48"
+    #   manufacturer     = "Mangdang"
+    #   model            = "Mini Pupper 2"
+    #   registered_owner = "John Smith"
+    #   primary_location = "re:Invent"
     # },
   }
   // Enter an object for each gas sensor you would like to connect
-  all_gas_sensors = {
+  mpc_gas_sensors = {
     // no spaces allowed in strings
     Gas1 : {
-      name       = "Gas1"
-      short_name = "G1"
+      name             = "Gas1"
+      short_name       = "G1"
+      computer_module  = "ESP32"
+      manufacturer     = "M5Stack"
+      model            = "M5StickC-Plus"
+      device           = "Gas Sensor"
+      registered_owner = "Lee Jeknis"
+      primary_location = "re:Invent"
     },
     # Gas2 : {
-    #   name       = "Gas2"
-    #   short_name = "G2"
+    #   name             = "Gas2"
+    #   short_name       = "G2"
+    #   computer_module  = "ESP32"
+    #   manufacturer     = "M5Stack"
+    #   model            = "M5StickC-Plus"
+    #   device           = "Gas Sensor"
+    #   registered_owner = "Lee Jeknis" // Your Name
+    #   primary_location = "re:Invent"
     # },
+
   }
 
   # - Cognito -
   # Admin Users to create
   mpc_admin_cognito_users = {
+    // replace with your desired cognito users
     NarutoUzumaki : {
       username       = "nuzumaki"
       given_name     = "Naruto"
@@ -80,22 +87,23 @@ module "minipupper-iot-core" {
       email          = "nuzumaki@hokage.com"
       email_verified = true // no touchy
     },
-    SasukeUchiha : {
-      username       = "suchiha"
-      given_name     = "Sasuke"
-      family_name    = "Uchiha"
-      email          = "suchiha@chidori.com"
-      email_verified = true // no touchy
-    },
+    # SasukeUchiha : {
+    #   username       = "suchiha"
+    #   given_name     = "Sasuke"
+    #   family_name    = "Uchiha"
+    #   email          = "suchiha@chidori.com"
+    #   email_verified = true // no touchy
+    # },
   }
   # Standard Users to create
-  mpc_standard_cognito_users = {
-    DefaultStandardUser : {
-      username       = "default"
-      given_name     = "Default"
-      family_name    = "User"
-      email          = "default@example.com"
-      email_verified = true // no touchy
-    }
-  }
+  # mpc_standard_cognito_users = {
+  #   // replace with your desired cognito users
+  #   DefaultStandardUser : {
+  #     username       = "default"
+  #     given_name     = "Default"
+  #     family_name    = "User"
+  #     email          = "default@example.com"
+  #     email_verified = true // no touchy
+  #   }
+  # }
 }

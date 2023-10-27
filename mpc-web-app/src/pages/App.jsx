@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
 /** **********************************************************************
                             DISCLAIMER
 
@@ -13,40 +11,34 @@ import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { Route, Routes, Link, useParams } from 'react-router-dom';
 
-// Components
+// - CORE COMPONENTS -
+// AMPLIFY
 import { Amplify, Auth } from 'aws-amplify';
 import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { AmplifyConfig } from '../config/amplify-config'; // NO TOUCHY
+Amplify.configure(AmplifyConfig);
+// PAGES
 import Dashboard from './Dashboard';
-import MyMiniPuppers from './MyMiniPuppers';
-import SingleMiniPupper from './SingleMiniPupper';
-import MiniPupperFleetControl from './MiniPupperFleetControl';
+import IoTDevices from './MyIoTDevices';
+import SingleIoTDevice from './SingleIoTDevice';
 import GettingStarted from './GettingStarted';
-import SetupGuide from './SetupGuide';
-import DataUploader from './DataUploader';
-import AccountSettings from './AccountSettings';
 import ErrorPage from './ErrorPage';
-import S3Objects from './S3Objects';
 import FetchUserDetails from '../common/components/FetchUserDetails';
+
+// Unused imports
+// import DataUploader from './DataUploader';
+// import AccountSettings from './AccountSettings';
+// import S3Objects from './S3Objects';
 
 // Styles
 import '@cloudscape-design/global-styles/index.css';
 
-// Amplify
-// import Amplify, { Auth, Storage, API, graphqlOperation } from 'aws-amplify';
-
-// eslint-disable-next-line import/no-unresolved
-import '@aws-amplify/ui-react/styles.css';
-
-// No touchy
-import { AmplifyConfig } from '../config/amplify-config';
-
-Amplify.configure(AmplifyConfig);
-
-// Uncomment line 44 for debugging
+// Uncomment line below for debugging
 // Amplify.Logger.LOG_LEVEL = 'DEBUG';
 Auth.currentCredentials().then((info) => {
   const cognitoIdentityId = info.identityId;
-  console.log('cognito identity id', cognitoIdentityId);
+  console.log('Cognito Identity ID:', cognitoIdentityId);
 });
 
 // eslint-disable-next-line react/prop-types
@@ -54,24 +46,18 @@ const App = ({ signOut, user }) => {
   // let { userId } = useParams();
   return (
     <>
-      {/* <Authenticator loginMechanisms={['email']}  hideSignUp> */}
-      {/* <Router> */}
       <FetchUserDetails user={user} signOut={signOut} />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/my-minipuppers/" element={<MyMiniPuppers />} />
-        <Route path="/my-minipuppers/:DeviceId" element={<SingleMiniPupper />} />
-        <Route path="/minipupper-fleet-control" element={<MiniPupperFleetControl />} />
+        <Route path="/iot-devices/" element={<IoTDevices />} />
+        <Route path="/iot-devices/:DeviceId" element={<SingleIoTDevice />} />
         <Route path="/getting-started" element={<GettingStarted />} />
-        {/* <Route path="/setup-guide" element={<SetupGuide />} /> */}
-        <Route path="/data-uploader" element={<DataUploader />} />
-        <Route path="/account-settings" element={<AccountSettings />} />
-        <Route path="/s3-objects" element={<S3Objects />} />
         <Route path="*" element={<ErrorPage />} />
+        {/* UNUSED ROUTES */}
+        {/* <Route path="/data-uploader" element={<DataUploader />} /> */}
+        {/* <Route path="/account-settings" element={<AccountSettings />} /> */}
       </Routes>
-      {/* </Router> */}
-      {/* </Authenticator> */}
     </>
   );
 };
