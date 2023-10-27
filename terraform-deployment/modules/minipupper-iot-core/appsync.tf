@@ -35,7 +35,7 @@ resource "aws_appsync_graphql_api" "mpc_appsync_graphql_api" {
 
 
   schema = <<EOF
-type MiniPupper  @aws_auth(cognito_groups: ["Admin", "Standard"])  {
+type IoTDevice  @aws_auth(cognito_groups: ["Admin", "Standard"])  {
   DeviceId: String!
   DeviceName: String
   DeviceStatus: String
@@ -44,60 +44,62 @@ type MiniPupper  @aws_auth(cognito_groups: ["Admin", "Standard"])  {
   ComputerModule: String
   Manufacturer: String
   Model: String
-  ResiteredOwner: String
+  Device: String
+  RegisteredOwner: String
   PrimaryLocation: String
 }
 
-type MiniPuppers {
-  items: [MiniPupper]
+type IoTDevices {
+  devices: [IoTDevice!]!
   nextToken: String
   @aws_auth(cognito_groups: ["Admin", "Standard"])
 }
 
-type GasSensor  @aws_auth(cognito_groups: ["Admin", "Standard"])  {
+type IoTMessage @aws_auth(cognito_groups: ["Admin", "Standard"])  {
+  MessageId: String!
+  Timestamp: String
+  IoTTopic: String
   DeviceId: String!
   DeviceName: String
-  DeviceStatus: String
   ShortName: String
-  Battery: Float
   ComputerModule: String
   Manufacturer: String
   Model: String
-  ResiteredOwner: String
+  Device: String
+  RegisteredOwner: String
   PrimaryLocation: String
+  Message: String!
 }
 
-type GasSensors {
-  items: [GasSensor]
+
+type IoTMessages {
+  messages: [IoTMessage!]!
   nextToken: String
   @aws_auth(cognito_groups: ["Admin", "Standard"])
 }
+
 
 type Query {
-  // REMOVE!!!
-  getAllMiniPuppers(limit: Int, nextToken: String): MiniPupperPaginated @aws_auth(cognito_groups: ["Admin", "Standard"])
-  getAllMiniPuppersPaginated(limit: Int, nextToken: String): MiniPupperPaginated @aws_auth(cognito_groups: ["Admin", "Standard"])
-  getOneMiniPupper(DeviceId: String!): MiniPupper @aws_auth(cognito_groups: ["Admin", "Standard"])
-
-  listMiniPuppers(limit: Int, nextToken: String): MiniPuppers @aws_auth(cognito_groups: ["Admin", "Standard"])
-  getMiniPupper(DeviceId: String!): MiniPupper @aws_auth(cognito_groups: ["Admin", "Standard"])
-
-  listGasSensors(limit: Int, nextToken: String): GasSensors @aws_auth(cognito_groups: ["Admin", "Standard"])
-  getGetGasSensor(DeviceId: String!): GasSensor @aws_auth(cognito_groups: ["Admin", "Standard"])
+  listIoTDevices(limit: Int, nextToken: String): IoTDevices @aws_auth(cognito_groups: ["Admin", "Standard"])
+  getIoTDevice(DeviceId: String!): IoTDevice @aws_auth(cognito_groups: ["Admin", "Standard"])
 
   listIoTMessages(limit: Int, nextToken: String): IoTMessages @aws_auth(cognito_groups: ["Admin", "Standard"])
   getIoTMessage(MessageId: String!): IoTMessage @aws_auth(cognito_groups: ["Admin", "Standard"])
-  }
 
-# type Mutation {
-#   deleteOneMiniPupper(DeviceId: String!): MiniPupper
-#   @aws_auth(cognito_groups: ["Admin",])
-# }
+  listIoTMessagesByDeviceId(DeviceId: String!, limit: Int, nextToken: String): IoTMessages! @aws_auth(cognito_groups: ["Admin", "Standard"])
+
+}
+
+## type Mutation {
+##   deleteOneMiniPupper(DeviceId: String!): IoTDevice
+##   @aws_auth(cognito_groups: ["Admin",])
+## }
 
 schema {
   query: Query
   # mutation: Mutation
 }
+
 EOF
 }
 
@@ -105,13 +107,13 @@ EOF
 # Resolvers
 # UNIT type resolver (default)
 # Query - Get a single Mini Pupper (APPSYNC_JS)
-resource "aws_appsync_resolver" "mpc_appsync_resolver_query_get_minipupper" {
+resource "aws_appsync_resolver" "mpc_appsync_resolver_query_get_iot_device" {
   api_id      = aws_appsync_graphql_api.mpc_appsync_graphql_api.id
   data_source = aws_appsync_datasource.mpc_appsync_dynamodb_datasource.name
   type        = "Query"
-  field       = "getMiniPupper"
+  field       = "getIoTDevice"
   kind        = "UNIT"
-  code        = file("${path.module}/appsync_js_resolvers/getMiniPupper.js")
+  code        = file("${path.module}/appsync_js_resolvers/getIoTDevice.js")
 
   runtime {
     name            = "APPSYNC_JS"
@@ -121,13 +123,13 @@ resource "aws_appsync_resolver" "mpc_appsync_resolver_query_get_minipupper" {
 }
 
 # Query - List all Mini Puppers (APPSYNC_JS)
-resource "aws_appsync_resolver" "mpc_appsync_resolver_query_list_minipuppers" {
+resource "aws_appsync_resolver" "mpc_appsync_resolver_query_list_iot_devices" {
   api_id      = aws_appsync_graphql_api.mpc_appsync_graphql_api.id
   data_source = aws_appsync_datasource.mpc_appsync_dynamodb_datasource.name
   type        = "Query"
-  field       = "listMiniPuppers"
+  field       = "listIoTDevices"
   kind        = "UNIT"
-  code        = file("${path.module}/appsync_js_resolvers/listMiniPuppers.js")
+  code        = file("${path.module}/appsync_js_resolvers/listIoTDevices.js")
 
   runtime {
     name            = "APPSYNC_JS"
@@ -168,7 +170,21 @@ resource "aws_appsync_resolver" "mpc_appsync_resolver_query_list_iot_messages" {
 
 }
 
+# Query - List all IoT Messages by Device Id (APPSYNC_JS)
+resource "aws_appsync_resolver" "mpc_appsync_resolver_query_list_iot_messages_by_device_id" {
+  api_id      = aws_appsync_graphql_api.mpc_appsync_graphql_api.id
+  data_source = aws_appsync_datasource.mpc_mqtt_appsync_dynamodb_datasource.name
+  type        = "Query"
+  field       = "listIoTMessagesByDeviceId"
+  kind        = "UNIT"
+  code        = file("${path.module}/appsync_js_resolvers/listIoTMessagesByDeviceId.js")
 
+  runtime {
+    name            = "APPSYNC_JS"
+    runtime_version = "1.0.0"
+  }
+
+}
 
 
 

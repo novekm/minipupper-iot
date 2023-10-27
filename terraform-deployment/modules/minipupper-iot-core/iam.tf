@@ -140,11 +140,12 @@ data "aws_iam_policy_document" "mpc_iot_trust_relationship" {
 
 # --- CUSTOMER MANAGED POLICIES (RESTRICTED ACCESS) ---
 # - IoT Policies -
+# Policy to AWS IoT Rule to PutItem in MPC MQTT DynamoDB Table
 data "aws_iam_policy_document" "mpc_iot_to_dynamodb_restricted_access_policy" {
   statement {
     effect    = "Allow"
     actions   = ["dynamodb:PutItem"]
-    resources = [aws_dynamodb_table.mpc_device_mqtt.arn]
+    resources = [aws_dynamodb_table.mpc_devices_mqtt.arn]
   }
 }
 resource "aws_iam_policy" "mpc_iot_to_dynamodb_restricted_access_policy" {
@@ -162,7 +163,8 @@ data "aws_iam_policy_document" "mpc_dynamodb_restricted_access_policy" {
     effect  = "Allow"
     actions = ["dynamodb:*"]
     resources = [
-      "${aws_dynamodb_table.mpc_devices.arn}",
+      # "${aws_dynamodb_table.mpc_devices.arn}",
+      "*",
     ]
   }
 }
@@ -181,7 +183,8 @@ data "aws_iam_policy_document" "mpc_mqtt_dynamodb_restricted_access_policy" {
     effect  = "Allow"
     actions = ["dynamodb:*"]
     resources = [
-      "${aws_dynamodb_table.mpc_device_mqtt.arn}",
+      # "${aws_dynamodb_table.mpc_devices_mqtt.arn}",
+      "*",
     ]
   }
 }
@@ -205,7 +208,8 @@ data "aws_iam_policy_document" "mpc_dynamodb_restricted_access_read_only_policy"
       "dynamodb:Query",
     ]
     resources = [
-      "${aws_dynamodb_table.mpc_devices.arn}",
+      # "${aws_dynamodb_table.mpc_devices.arn}",
+      "*",
     ]
   }
 }
@@ -345,91 +349,20 @@ resource "aws_iam_role" "mpc_appsync_dynamodb_restricted_access" {
   )
 }
 
-# - Eventbridge Roles -
 
-# Eventbrige Invoke Step Functions Restricted Access
-# Role granting Eventbridge S3 restricted access, SSM restricted read-only access, and the ablity to access to CloudWatch Logs.
-# Role allows Eventbridge to invoke step functions
-# resource "aws_iam_role" "mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access" {
-#   # Conditional create of the role - default is 'TRUE'
-#   count              = var.create_restricted_access_roles ? 1 : 0
-#   name               = "mpc_eventbridge_invoke_custom_event_bus_restricted_access"
-#   assume_role_policy = data.aws_iam_policy_document.mpc_eventbridge_trust_relationship.json
-#   # Managed Policies
-#   managed_policy_arns = [
-#     aws_iam_policy.mpc_eventbridge_invoke_custom_mpc_event_bus_restricted_access_policy[0].arn,
-#     # aws_iam_policy.mpc_s3_restricted_access_policy[0].arn,
-#     # aws_iam_policy.mpc_ssm_restricted_access_policy[0].arn,
-#     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-#   ]
+# - IoT Roles -
+# IoT Restricted Access Role
+# Role granting IoT DynamoDB restricted access (PutItem).
+resource "aws_iam_role" "mpc_iot_to_dynamodb_restricted_access" {
+  # Conditional create of the role - default is 'TRUE'
+  count              = var.create_restricted_access_roles ? 1 : 0
+  name               = "mpc_iot_to_dynamodb_restricted_access"
+  assume_role_policy = data.aws_iam_policy_document.mpc_iot_trust_relationship.json
+  managed_policy_arns = [
+    aws_iam_policy.mpc_iot_to_dynamodb_restricted_access_policy[0].arn
+  ]
+}
 
-#   force_detach_policies = true
-#   path                  = "/${var.mpc_app_name}/"
-
-#   tags = merge(
-#     {
-#       "AppName" = var.mpc_app_name
-#     },
-#     var.tags,
-#   )
-# }
-# Eventbrige Invoke Step Functions Restricted Access
-# Role granting Eventbridge S3 restricted access, SSM restricted read-only access, and the ablity to access to CloudWatch Logs.
-# Role allows Eventbridge to invoke step functions
-# resource "aws_iam_role" "mpc_eventbridge_invoke_sfn_state_machine_restricted_access" {
-#   # Conditional create of the role - default is 'TRUE'
-#   count              = var.create_restricted_access_roles ? 1 : 0
-#   name               = "mpc_eventbridge_invoke_sfn_state_machine_restricted_access"
-#   assume_role_policy = data.aws_iam_policy_document.mpc_eventbridge_trust_relationship.json
-#   # Managed Policies
-#   managed_policy_arns = [
-#     # aws_iam_policy.mpc_eventbridge_invoke_sfn_state_machine_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_s3_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_ssm_restricted_access_policy[0].arn,
-#     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-#   ]
-
-#   force_detach_policies = true
-#   path                  = "/${var.mpc_app_name}/"
-
-#   tags = merge(
-#     {
-#       "AppName" = var.mpc_app_name
-#     },
-#     var.tags,
-#   )
-# }
-
-# - Step Function Roles -
-# Step Functions Master Role Restricted Access
-# Role granting Step Functions S3 restricted access, SSM restricted read-only access,
-# DynamoDB restricted access, and the ablity to access to CloudWatch Logs.
-# Role allows Step Function to invoke lambda functions
-# resource "aws_iam_role" "mpc_step_functions_master_restricted_access" {
-#   # Conditional create of the role - default is 'TRUE'
-#   count              = var.create_restricted_access_roles ? 1 : 0
-#   name               = "mpc_step_functions_master_restricted_access"
-#   description        = "Master step function role that grants S3 restricted access, SSM restricted access, DynamoDB restricted access as well as CloudWatch full access. "
-#   assume_role_policy = data.aws_iam_policy_document.mpc_step_function_trust_relationship.json
-#   # Managed Policies
-#   managed_policy_arns = [
-#     aws_iam_policy.mpc_s3_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_ssm_restricted_access_policy[0].arn,
-#     aws_iam_policy.mpc_dynamodb_restricted_access_policy[0].arn,
-#     "arn:aws:iam::aws:policy/AmazonSNSFullAccess",
-#     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-#   ]
-
-#   force_detach_policies = true
-#   path                  = "/${var.mpc_app_name}/"
-
-#   tags = merge(
-#     {
-#       "AppName" = var.mpc_app_name
-#     },
-#     var.tags,
-#   )
-# }
 
 # Amplify
 
@@ -454,7 +387,6 @@ resource "aws_iam_user" "mpc_gitlab_mirroring" {
     var.tags,
   )
 }
-
 resource "aws_iam_user_policy" "mpc_gitlab_mirroring_policy" {
   count = var.mpc_enable_gitlab_mirroring ? 1 : 0
   name  = var.mpc_gitlab_mirroring_policy_name

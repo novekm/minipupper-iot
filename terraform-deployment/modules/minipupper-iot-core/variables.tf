@@ -1,137 +1,19 @@
-# # # SNS
-# # variable "mpc_enable_sns" {
-# #   type        = bool
-# #   default     = true
-# #   description = "Conditional creation of SNS resources"
-
-# # }
-# # variable "mpc_sns_email_endpoint" {
-# #   type        = string
-# #   default     = null
-# #   description = "The Admin email address to be used for SNS subscription. Required if mpc_enable_sns is set to 'true'"
-
-# # }
-
 # SSM
-variable "lookup_ssm_github_access_token" {
-  type        = bool
-  default     = false
-  description = <<-EOF
-  *ImpcORTANT!*
-  Conditional data fetch of SSM parameter store for GitHub access token.
-  To ensure security of this token, you must manually add it via the AWS console
-  before using.
-  EOF
-
+variable "lookup_existing_general_ssm_parameters" {
+  type    = bool
+  default = false
 }
-variable "ssm_github_access_token_name" {
-  type        = string
-  default     = null
-  description = "The name (key) of the SSM parameter store of your GitHub access token"
+variable "lookup_existing_minipuppers_ssm_parameters" {
+  type    = bool
+  default = false
+}
+
+variable "mpc_upload_docker_compose_to_existing_s3_bucket" {
+  type    = bool
+  default = false
 
 }
 
-# - S3 -
-variable "mpc_landing_bucket_name" {
-  type        = string
-  default     = "mpc-landing-bucket"
-  description = "Name of the S3 bucket for audio file upload. Max 27 characters"
-}
-variable "mpc_input_bucket_name" {
-  type        = string
-  default     = "mpc-input-bucket"
-  description = "Name of the S3 bucket for transcribe job source. Max 27 characters"
-}
-variable "mpc_devices_bucket_name" {
-  type        = string
-  default     = "mpc-output-bucket"
-  description = "Output bucket for completed transcriptions. Max 27 characters"
-}
-variable "mpc_app_storage_bucket_name" {
-  type        = string
-  default     = "mpc-app-storage-bucket"
-  description = "Bucket used for Amplify app storage. Max 27 characters"
-}
-
-variable "s3_enable_force_destroy" {
-  type    = string
-  default = "true"
-
-}
-variable "mpc_s3_enable_bucket_policy" {
-  type        = bool
-  default     = true
-  description = "Conditional creation of S3 bucket policies"
-
-}
-variable "mpc_s3_block_public_access" {
-  type        = bool
-  default     = true
-  description = "Conditional enabling of the block public access S3 feature"
-
-}
-variable "mpc_s3_block_public_acls" {
-  type        = bool
-  default     = true
-  description = "Conditional enabling of the block public ACLs S3 feature"
-
-}
-variable "mpc_s3_block_public_policy" {
-  type        = bool
-  default     = true
-  description = "Conditional enabling of the block public policy S3 feature"
-
-}
-variable "mpc_landing_bucket_enable_cors" {
-  type        = bool
-  default     = true
-  description = "Contiditional enabling of CORS"
-
-}
-variable "mpc_landing_bucket_create_nuke_everything_lifecycle_config" {
-  type        = bool
-  default     = true
-  description = "Conditional create of the lifecycle config to remove all objects from the bucket"
-}
-variable "mpc_landing_bucket_days_until_objects_expiration" {
-  type        = number
-  default     = 1
-  description = "The number of days until objects in the bucket are deleted"
-}
-
-variable "mpc_input_bucket_enable_cors" {
-  type        = bool
-  default     = true
-  description = "Contiditional enabling of CORS"
-
-}
-variable "mpc_input_bucket_create_nuke_everything_lifecycle_config" {
-  type        = bool
-  default     = true
-  description = "Conditional create of the lifecycle config to remove all objects from the bucket"
-}
-variable "mpc_input_bucket_days_until_objects_expiration" {
-  type        = number
-  default     = 1
-  description = "The number of days until objects in the bucket are deleted"
-}
-variable "mpc_devices_bucket_enable_cors" {
-  type        = bool
-  default     = true
-  description = "Contiditional enabling of CORS"
-
-}
-variable "mpc_devices_bucket_create_nuke_everything_lifecycle_config" {
-  type        = bool
-  default     = true
-  description = "Conditional create of the lifecycle config to remove all objects from the bucket"
-
-}
-variable "mpc_devices_bucket_days_until_objects_expiration" {
-  type        = number
-  default     = 1
-  description = "The number of days until objects in the bucket are deleted"
-}
 
 # - Amplify -
 variable "create_amplify_app" {
@@ -191,12 +73,7 @@ variable "mpc_existing_repo_url" {
   description = "URL for the existing repo"
 
 }
-variable "github_access_token" {
-  type        = string
-  default     = null
-  description = "Optional GitHub access token. Only required if using GitHub repo."
 
-}
 variable "mpc_amplify_app_framework" {
   type    = string
   default = "React"
@@ -215,6 +92,72 @@ variable "mpc_amplify_app_domain_name" {
 }
 
 
+# CodeCommit
+variable "mpc_create_codecommit_repo" {
+  type    = bool
+  default = false
+}
+variable "mpc_codecommit_repo_name" {
+  type    = string
+  default = "mpc_codecommit_repo"
+}
+variable "mpc_codecommit_repo_description" {
+  type    = string
+  default = "The CodeCommit repo created in the mpc deployment"
+}
+variable "mpc_codecommit_repo_default_branch" {
+  type    = string
+  default = "main"
+
+}
+
+
+# GitHub
+variable "lookup_ssm_github_access_token" {
+  type        = bool
+  default     = false
+  description = <<-EOF
+  *ImpcORTANT!*
+  Conditional data fetch of SSM parameter store for GitHub access token.
+  To ensure security of this token, you must manually add it via the AWS console
+  before using.
+  EOF
+
+}
+
+variable "github_access_token" {
+  type        = string
+  default     = null
+  description = "Optional GitHub access token. Only required if using GitHub repo."
+
+}
+
+variable "ssm_github_access_token_name" {
+  type        = string
+  default     = null
+  description = "The name (key) of the SSM parameter store of your GitHub access token"
+
+}
+
+
+# GitLab Mirroring
+variable "mpc_enable_gitlab_mirroring" {
+  type        = bool
+  default     = false
+  description = "Enables GitLab mirroring to the option AWS CodeCommit repo."
+}
+variable "mpc_gitlab_mirroring_iam_user_name" {
+  type        = string
+  default     = "mpc_gitlab_mirroring"
+  description = "The IAM Username for the GitLab Mirroring IAM User."
+}
+variable "mpc_gitlab_mirroring_policy_name" {
+  type        = string
+  default     = "mpc_gitlab_mirroring_policy"
+  description = "The name of the IAM policy attached to the GitLab Mirroring IAM User"
+}
+
+
 # AppSync - GraphQL
 variable "mpc_appsync_graphql_api_name" {
   type    = string
@@ -222,14 +165,6 @@ variable "mpc_appsync_graphql_api_name" {
 
 }
 
-
-# - Step Function -
-variable "mpc_sfn_state_machine_name" {
-  type        = string
-  default     = "mpc-state-machine"
-  description = "Name of the state machine used to orchestrate pipeline"
-
-}
 
 # - IAM -
 
@@ -437,14 +372,6 @@ variable "mpc_number_schemas" {
   default     = []
 }
 
-
-
-
-
-
-
-
-
 # Admin Users
 variable "mpc_admin_cognito_users" {
   type    = map(any)
@@ -478,93 +405,18 @@ variable "mpc_standard_cognito_user_group_description" {
 
 }
 
-# GitLab Mirroring
-
-variable "mpc_enable_gitlab_mirroring" {
-  type        = bool
-  default     = false
-  description = "Enables GitLab mirroring to the option AWS CodeCommit repo."
-}
-variable "mpc_gitlab_mirroring_iam_user_name" {
-  type        = string
-  default     = "mpc_gitlab_mirroring"
-  description = "The IAM Username for the GitLab Mirroring IAM User."
-}
-variable "mpc_gitlab_mirroring_policy_name" {
-  type        = string
-  default     = "mpc_gitlab_mirroring_policy"
-  description = "The name of the IAM policy attached to the GitLab Mirroring IAM User"
-}
-
-
-
-# CodeCommit
-variable "mpc_create_codecommit_repo" {
-  type    = bool
-  default = false
-}
-variable "mpc_codecommit_repo_name" {
-  type    = string
-  default = "mpc_codecommit_repo"
-}
-variable "mpc_codecommit_repo_description" {
-  type    = string
-  default = "The CodeCommit repo created in the mpc deployment"
-}
-variable "mpc_codecommit_repo_default_branch" {
-  type    = string
-  default = "main"
-
-}
-
-
-#  - Step Function -
-# State Management
-# GenerateUUID
-variable "mpc_sfn_state_generate_uuid_name" {
-  type        = string
-  default     = "GenerateUUID"
-  description = "Name for SFN State that generates a UUID that is appended to the object key of the file copied from mpc_landing to mpc_input bucket"
-
-}
-# variable "mpc_sfn_state_generate_uuid_type" {
-#   type        = string
-#   default     = "Pass"
-#   description = "Pass state type"
-
-# }
-variable "mpc_sfn_state_generate_uuid_next_step" {
-  type    = string
-  default = "GetmpcInputFile"
-
-}
-
-# GetInputFile
-variable "create_mpc_sfn_state_get_mpc_input_file" {
-  type        = bool
-  default     = true
-  description = "Enables creation of GetmpcInputFile sfn state"
-
-}
-variable "mpc_sfn_state_get_mpc_input_file_name" {
-  type        = string
-  default     = "GetmpcInputFile"
-  description = "Generates a UUID that is appended to the object key of the file copied from mpc_landing to mpc_input bucket"
-
-}
-
-
+# - IoT Core -
 # IoT Things
-variable "all_minipuppers" {
+variable "mpc_minipuppers" {
   type    = map(any)
   default = {}
 }
-variable "all_gas_sensors" {
+variable "mpc_gas_sensors" {
   type    = map(any)
   default = {}
 }
 
-# WiFi Information
+# - WiFi Information -
 variable "mpc_wifi_ssid_1" {
   type        = string
   default     = ""
@@ -582,45 +434,46 @@ variable "mpc_wifi_password_1" {
 variable "mpc_wifi_ssid_2" {
   type        = string
   default     = ""
-  description = "The SSID for the 1st backup local network you want MiniPupper to connect to."
+  description = "The SSID for the first backup local network you want MiniPupper to connect to."
   sensitive   = true
 
 }
 variable "mpc_wifi_password_2" {
   type        = string
   default     = ""
-  description = "The password for the 1st backup local network you want MiniPupper to connect to."
-  sensitive   = true
-
-}
-variable "mpc_wifi_ssid_3" {
-  type        = string
-  default     = ""
-  description = "The SSID for the 2nd backup local network you want MiniPupper to connect to."
+  description = "The password for the first backup local network you want MiniPupper to connect to."
   sensitive   = true
 
 }
 variable "mpc_wifi_password_3" {
   type        = string
   default     = ""
-  description = "The password for the 2nd backup local network you want MiniPupper to connect to."
+  description = "The password for the second backup local network you want MiniPupper to connect to."
   sensitive   = true
 
 }
-variable "mpc_wifi_ssid_4" {
+variable "mpc_wifi_ssid_3" {
   type        = string
   default     = ""
-  description = "The SSID for the 3rd backup local network you want MiniPupper to connect to."
+  description = "The SSID for the second backup local network you want MiniPupper to connect to."
   sensitive   = true
 
 }
 variable "mpc_wifi_password_4" {
   type        = string
   default     = ""
-  description = "The password for the 3rd backup local network you want MiniPupper to connect to."
+  description = "The password for the third backup local network you want MiniPupper to connect to."
   sensitive   = true
 
 }
+variable "mpc_wifi_ssid_4" {
+  type        = string
+  default     = ""
+  description = "The SSID for the third backup local network you want MiniPupper to connect to."
+  sensitive   = true
+
+}
+
 
 # Tagging
 variable "tags" {
@@ -630,3 +483,5 @@ variable "tags" {
     "IAC_PROVIDER" = "Terraform"
   }
 }
+
+

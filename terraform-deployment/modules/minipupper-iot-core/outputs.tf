@@ -1,74 +1,45 @@
-# # AWS Current Region
-# output "aws_current_region" {
-#   value = data.aws_region.current
+# NOTE - It is not a best practice to mark SSM Parameters as 'nonsensitive' because this means the values will be displayed in the terminal. However, this is added in to make it easier to see during a workshop setting. We HIGHLY recommend avoiding this in production environments.
 
-# }
+output "mpc_existing_s3_bucket_ssm" {
+  value = var.lookup_existing_general_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_s3_bucket_ssm[0].value) : null
+}
 
-# # S3
-# output "mpc_input_bucket_id" {
-#   value       = aws_s3_bucket.mpc_input_bucket
-#   description = "The name of the S3 input bucket"
-# }
-# output "mpc_input_bucket_arn" {
-#   value       = aws_s3_bucket.mpc_input_bucket
-#   description = "The Arn of the S3 input bucket"
-# }
-# output "mpc_devices_bucket_id" {
-#   value       = aws_s3_bucket.mpc_devices_bucket
-#   description = "The name of the S3 output bucket"
-# }
-# output "mpc_devices_bucket_arn" {
-#   value       = aws_s3_bucket.mpc_devices_bucket
-#   description = "The Arn of the S3 input bucket"
-# }
-# output "mpc_app_storage_bucket_id" {
-#   value       = aws_s3_bucket.mpc_app_storage_bucket
-#   description = "The name of the S3 app storage bucket"
-# }
-# output "mpc_app_storage_bucket_arn" {
-#   value       = aws_s3_bucket.mpc_app_storage_bucket
-#   description = "The ARN of the S3 app storage bucket"
-# }
+output "mpc_existing_minipupper_thing_name_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_thing_name_ssm[0].value) : null
+}
+output "mpc_existing_minipupper_device_id_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value) : null
+}
 
-# # Ampclify
+output "mpc_existing_minipupper_device_name_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_device_name_ssm[0].value) : null
+}
 
-# # Step Function
-# output "mpc_step_function_arn" {
-#   value = aws_sfn_state_machine.mpc_sfn_state_machine.arn
+output "mpc_existing_minipupper_short_name_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_short_name_ssm[0].value) : null
+}
 
-# }
+output "mpc_existing_minipupper_computer_module_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_computer_module_ssm[0].value) : null
+}
 
-# # IAM
+output "mpc_existing_minipupper_manfacturer_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_manfacturer_ssm[0].value) : null
+}
 
-# # DynamoDB
-# output "mpc_dynamodb_output_table_name" {
-#   value = aws_dynamodb_table.mpc_devices.name
-# }
+output "mpc_existing_minipupper_model_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_model_ssm[0].value) : null
+}
 
+output "mpc_existing_minipupper_device_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_device_ssm[0].value) : null
+}
 
+output "mpc_existing_minipupper_registered_owner_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_registered_owner_ssm[0].value) : null
+}
 
-# # Cognito
-# output "mpc_user_pool_region" {
-#   value = data.aws_region.current
-# }
-# output "mpc_user_pool_id" {
-#   value = aws_cognito_user_pool.mpc_user_pool
-# }
-# output "mpc_user_pool_client_id" {
-#   value = aws_cognito_user_pool_client.mpc_user_pool_client
-# }
-# output "mpc_identity_pool_id" {
-#   value = aws_cognito_identity_pool.mpc_identity_pool
-# }
+output "mpc_existing_minipupper_primary_location_ssm" {
+  value = var.lookup_existing_minipuppers_ssm_parameters ? nonsensitive(data.aws_ssm_parameter.mpc_existing_minipupper_primary_location_ssm[0].value) : null
+}
 
-
-# # AppSync (GraphQL)
-# output "mpc_appsync_graphql_api_region" {
-#   value = data.aws_region.current
-# }
-# output "mpc_appsync_graphql_api_id" {
-#   value = aws_appsync_graphql_api.mpc_appsync_graphql_api
-# }
-# output "mpc_appsync_graphql_api_uris" {
-#   value = aws_appsync_graphql_api.mpc_appsync_graphql_api
-# }
