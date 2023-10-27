@@ -1,4 +1,4 @@
-# RoboPupper: Connected Worker Safety with Robots and Terraform! 🐶🐾
+# Mini Pupper IoT: Connected Worker Safety with Robots and Terraform! 🐶🐾
 #### Core Contributors:
 **[Kevon Mayers](https://www.linkedin.com/in/kevonmayers)**: Project Lead, Terraform deployment & Full Stack Web App
 
