@@ -1,4 +1,4 @@
-// This is a template file for a basic deployment.
+// This is a tempclate file for a basic deployment.
 // Modify the parameters below with actual values
 module "minipupper-iot-core" {
   // location of the module - can be local or git repo
@@ -15,42 +15,18 @@ module "minipupper-iot-core" {
   mpc_wifi_ssid_1     = "" // enter SSID for the primary local network you want devices to connect to
   mpc_wifi_password_1 = "" // enter password for the primary local network you want devices to
 
+  # Conditional Data Source fetch of existing values in SSM Parameter store.
+  # Note: Only use these variables if at an AWS Event, or you modify the module to use your own parameters.
+  # If not at an AWS Event (using a provided AWS account) these values will not exist in your account
+  # and the lookup will fail and throw and error.
+
+  lookup_existing_general_ssm_parameters     = true
+  lookup_existing_minipuppers_ssm_parameters = true
+
+
   # - IoT -
   # Dynamic Creation of IoT Things for Mini Puppers and Gas Sensors
-
   // Enter an object for each Mini Pupper you would like to connect/register
-  mpc_minipuppers = {
-    MiniPupper1 : {
-      // no spaces allowed in strings
-      name             = "MiniPupper1"
-      short_name       = "MP1"
-      computer_module  = "RaspberryPi48"
-      manufacturer     = "Mangdang"
-      model            = "Mini Pupper 2"
-      registered_owner = "John Smith"
-      primary_location = "re:Invent"
-    },
-    # MiniPupper2 : {
-    #   name             = "MiniPupper2"
-    #   short_name       = "MP2"
-    #   computer_module  = "RaspberryPi48"
-    #   manufacturer     = "Mangdang"
-    #   model            = "Mini Pupper 2"
-    #   device           = "M5StickCPlus"
-    #   registered_owner = "John Smith"
-    #   primary_location = "re:Invent"
-    # },
-    # MiniPupper3 : {
-    #   name             = "MiniPupper3"
-    #   short_name       = "MP3"
-    #   computer_module  = "RaspberryPi48"
-    #   manufacturer     = "Mangdang"
-    #   model            = "Mini Pupper 2"
-    #   registered_owner = "John Smith"
-    #   primary_location = "re:Invent"
-    # },
-  }
-  // Enter an object for each gas sensor you would like to connect
   mpc_gas_sensors = {
     // no spaces allowed in strings
     Gas1 : {
