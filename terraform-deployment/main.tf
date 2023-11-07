@@ -36,7 +36,7 @@ module "minipupper-iot-core" {
       manufacturer     = "M5Stack"
       model            = "M5StickC-Plus"
       device           = "Gas Sensor"
-      registered_owner = "Lee Jeknis" // Replace with your name
+      registered_owner = "Workshop Participant" // Replace with your name
       primary_location = "re:Invent"
     },
     # Gas2 : {

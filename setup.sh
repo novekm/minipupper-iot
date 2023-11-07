@@ -11,7 +11,7 @@ arduino-cli config init
 arduino-cli config add board_manager.additional_urls https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/arduino/package_m5stack_index.json
 
 # Install board core
-arduino-cli core install m5stack:esp32
+arduino-cli core install m5stack:esp32@2.0.7
 
 # Install pyserial
 pip3 install pyserial
