@@ -18,7 +18,7 @@ Resources:
     Properties:
       Name: MiniPupperDeviceId
       Type: String
-      Value: MiniPupper_1234
+      Value: MiniPupper_2
       Description: SSM Parameter for DeviceId of pre-configured Mini Pupper.
   MiniPupperDeviceName:
     Type: AWS::SSM::Parameter

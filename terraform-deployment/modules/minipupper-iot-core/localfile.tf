@@ -360,19 +360,20 @@ resource "local_file" "dynamic_secrets_h_gas_sensors" {
   #define SECRET
 
   #define THINGNAME "${each.value.name}"
+  #define DEVICE_ID "${each.value.name}_${each.value.short_name}"
 
   #define AWS_IOT_ENDPOINT        "${data.aws_iot_endpoint.current.endpoint_address}"
 
   #define MINIPUPPER_PUB_TOPIC        "device/${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}/do"
-  #define MINIPUPPER_SUB_TOPIC        "MP1/sub"
-  #define MINIPUPPER_ACTION_SELF      "khi"
+  #define MINIPUPPER_SUB_TOPIC        "device/${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}/do"
+  #define MINIPUPPER_ACTION_SELF      "lookaround"
 
   #define MINIPUPPER_GLOBAL_PUB_TOPIC "MP-global/data"
   #define MINIPUPPER_GLOBAL_SUB_TOPIC "MP-global/data"
   #define MINIPUPPER_ACTION_GLOBAL    "kck" // TODO - Use Arduino JSON and make this 'Look around'
 
-  #define DATA_PUB_TOPIC          "${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}/do"
-  #define DATA_SUB_TOPIC          "${each.value.name}/sub"
+  #define DATA_PUB_TOPIC          "${each.value.name}_${each.value.short_name}/pub"
+  #define DATA_SUB_TOPIC          "${each.value.name}_${each.value.short_name}/sub"
   #define SHADOW_GET_PUB_TOPIC    "$aws/things/${each.value.name}/shadow/name/State/get"
   #define SHADOW_GET_SUB_TOPIC    "$aws/things/${each.value.name}/shadow/name/State/get/accepted"
   #define SHADOW_UPDATE_PUB_TOPIC "$aws/things/${each.value.name}/shadow/name/State/update"
@@ -797,7 +798,7 @@ resource "local_file" "dynamic_ino_gas_sensors" {
 
         // Craft message with needed values
         StaticJsonDocument<1024> doc;
-        doc["device_id"] = THINGNAME;
+        doc["DeviceId"] = DEVICE_ID;
         doc["device_no"] = DEVICE_NO;
 
         char jsonBuffer[1024];
@@ -852,13 +853,13 @@ resource "local_file" "dynamic_ino_gas_sensors" {
     void publishMessage() {
         StaticJsonDocument<1024> doc;
 
-        doc["device_id"]        = THINGNAME;
-        doc["time"]             = GetEpochTime();
-        doc["gas_reading"]      = gas_reading;
-        doc["alarm_local"]      = alarm_local;
-        doc["alarm_threshold"]  = alarm_threshold;
-        doc["battery_capacity"] = battery_capacity;
-        doc["battery_level"]    = battery_level;
+        doc["DeviceId"]        = DEVICE_ID;
+        doc["Timestamp"]       = GetEpochTime();
+        doc["GasReading"]      = gas_reading;
+        doc["AlarmLocal"]      = alarm_local;
+        doc["AlarmThreshold"]  = alarm_threshold;
+        doc["BatteryCapacity"] = battery_capacity;
+        doc["BatteryLevel"]    = battery_level;
 
         char jsonBuffer[1024];
         serializeJson(doc, jsonBuffer); // print to client
@@ -871,7 +872,16 @@ resource "local_file" "dynamic_ino_gas_sensors" {
     void publishActionSelf() {
         StaticJsonDocument<1024> doc;
 
-        doc["message"] = MINIPUPPER_ACTION_SELF;
+        doc["DeviceId"] = "${each.value.name}_${each.value.short_name}";
+        doc["Device"] = "${each.value.device}";
+        doc["DeviceName"] = "${each.value.name}";
+        doc["Manufacturer"] = "${each.value.manufacturer}";
+        doc["Message"]["move"] = MINIPUPPER_ACTION_SELF;
+        doc["Model"] = "${each.value.model}";
+        doc["PrimaryLocation"] = "${each.value.primary_location}";
+        doc["RegisteredOwner"] = "${each.value.registered_owner}";
+        doc["ShortName"] = "${each.value.short_name}";
+        doc["Timestamp"] = GetEpochTime();
 
         char jsonBuffer[1024];
         serializeJson(doc, jsonBuffer); // print to client
@@ -880,7 +890,7 @@ resource "local_file" "dynamic_ino_gas_sensors" {
     }
 
 
-    // Publish message to Mini Pupper group
+    // Publish message to Mini Pupper group (not currently used)
     void publishActionGlobal() {
         StaticJsonDocument<1024> doc;
 
@@ -923,7 +933,7 @@ resource "local_file" "dynamic_ino_gas_sensors" {
     }
 
 
-    // Function that gets current epoch time
+    // Function that gets current epoch time (consider changing to ISO8601 eventually)
     unsigned long GetEpochTime() {
         time_t now;
         struct tm timeinfo;
