@@ -415,6 +415,15 @@ variable "mpc_gas_sensors" {
   type    = map(any)
   default = {}
 }
+variable "create_greengrass_component" {
+  type    = bool
+  default = false
+
+}
+variable "create_greengrass_deployment" {
+  type    = bool
+  default = false
+}
 
 # - WiFi Information -
 variable "mpc_wifi_ssid_1" {
