@@ -239,13 +239,14 @@ EOH
 resource "awscc_greengrassv2_deployment" "mpc_greengrass_deployment" {
   count = var.create_greengrass_deployment ? 1 : 0
 
-  target_arn      = aws_iot_thing_group.minipupper_fleet.arn
+  # target_arn      = aws_iot_thing_group.minipupper_fleet.arn
+  target_arn      = "arn:aws:iot:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:thinggroup/dancers"
   deployment_name = "Deployment for dancers"
   components = {
     "aws.greengrass.Cli" = {
       component_version = "2.12.0",
     },
-    "${awscc_greengrassv2_component_version.example.component_name}" = {
+    "${awscc_greengrassv2_component_version.mpc_greengrass_component[0].component_name}" = {
       component_version = "1.0.0",
     }
   }
