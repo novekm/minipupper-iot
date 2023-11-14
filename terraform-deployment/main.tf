@@ -33,19 +33,19 @@ module "minipupper-iot-core" {
   // Enter an object for each gas sensor you would like to connect
 
 
-  mpc_minipuppers = {
-    // no spaces allowed in strings
-    MP1 : {
-      name             = "MiniPupper"
-      short_name       = "MP"
-      computer_module  = "RaspberryPi4B"
-      manufacturer     = "Mangdang"
-      model            = "Mini Pupper 2"
-      device           = "Mini Pupper"
-      registered_owner = "Workshop Participant" // Replace with your name
-      primary_location = "re:Invent"
-    },
-  }
+  # mpc_minipuppers = {
+  #   // no spaces allowed in strings
+  #   MP1 : {
+  #     name             = "MiniPupper"
+  #     short_name       = "MP"
+  #     computer_module  = "RaspberryPi4B"
+  #     manufacturer     = "Mangdang"
+  #     model            = "Mini Pupper 2"
+  #     device           = "Mini Pupper"
+  #     registered_owner = "Workshop Participant" // Replace with your name
+  #     primary_location = "re:Invent"
+  #   },
+  # }
   mpc_gas_sensors = {
     // no spaces allowed in strings
     Gas1 : {
