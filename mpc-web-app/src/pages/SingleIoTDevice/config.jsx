@@ -355,7 +355,7 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
                   IoTTopic: `device/${singleIoTDeviceId}/do`,
                   Message: {
-                      move: 'Stand'
+                      move: 'stand'
                   }
                 })
               }
@@ -377,7 +377,7 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
                   IoTTopic: `device/${singleIoTDeviceId}/do`,
                   Message: {
-                      move: 'Sit'
+                      move: 'sit'
                   }
                 })
               }
@@ -399,8 +399,9 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
                   IoTTopic: `device/${singleIoTDeviceId}/do`,
                   Message: {
-                      move: 'Stop'
-                  }
+                      move: 'stop'
+                  },
+                  move: 'stop'
                 })
               }
               variant='primary'
@@ -408,30 +409,6 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
               Stop
             </Button>
           </div>
-
-
-          {/* <div>
-            <Button
-              onClick={() =>
-                PubSub.publish(`device/${singleIoTDeviceId}/data`, {
-                  MessageId: uuidv4(),
-                  Timestamp: currentTimeISO,
-                  DeviceId: `${singleIoTDeviceId}`,
-                  SerialNumber: `${singleIoTDevice.SerialNumber}`,
-                  DeviceName: `${singleIoTDevice.DeviceName}`,
-                  ShortName: `${singleIoTDevice.ShortName}`,
-                  Manufacturer:`${singleIoTDevice.Manufacturer}`,
-                  Model: `${singleIoTDevice.Model}`,
-                  RegisteredPatient: `${singleIoTDeviceRegisteredPatient}`,
-                  FloorNumber: `${singleIoTDevice.FloorNumber}`,
-                  RoomNumber: `${singleIoTDevice.RoomNumber}`,
-                  Message: 'I love you',
-                })
-              }
-            >
-              I love you 💟
-            </Button>
-          </div> */}
         </div>
       </SpaceBetween>
 
@@ -439,7 +416,6 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
       <SpaceBetween size="l">
         {/* First Item */}
         <div>
-          {/* TODO - Parse data for emissions_output with JSON.parse() */}
           <Box variant="awsui-key-label">Actions</Box>
           <div>
             <Button
@@ -457,14 +433,110 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
                   IoTTopic: `device/${singleIoTDeviceId}/do`,
                   Message: {
-                      move: 'Look around'
+                      move: 'look_up'
+                  },
+                  move: 'look_up'
+                })
+              }
+              variant='primary'
+            >
+              Look Up
+            </Button>
+            <Button
+              onClick={() =>
+                PubSub.publish(`device/${singleIoTDeviceId}/do`, {
+                  MessageId: uuidv4(),
+                  Timestamp: currentTimeISO,
+                  DeviceId: `${singleIoTDeviceId}`,
+                  DeviceName: `${singleIoTDevice.DeviceName}`,
+                  ShortName: `${singleIoTDevice.ShortName}`,
+                  Manufacturer:`${singleIoTDevice.Manufacturer}`,
+                  Model: `${singleIoTDevice.Model}`,
+                  Device: `${singleIoTDevice.Device}`,
+                  RegisteredOwner: `${singleIoTDevice.RegisteredOwner}`,
+                  PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
+                  IoTTopic: `device/${singleIoTDeviceId}/do`,
+                  Message: {
+                      move: 'look_down'
+                  },
+                  move: 'look_down'
+                })
+              }
+              variant='primary'
+            >
+              Look Down
+            </Button>
+            <Button
+              onClick={() =>
+                PubSub.publish(`device/${singleIoTDeviceId}/do`, {
+                  MessageId: uuidv4(),
+                  Timestamp: currentTimeISO,
+                  DeviceId: `${singleIoTDeviceId}`,
+                  DeviceName: `${singleIoTDevice.DeviceName}`,
+                  ShortName: `${singleIoTDevice.ShortName}`,
+                  Manufacturer:`${singleIoTDevice.Manufacturer}`,
+                  Model: `${singleIoTDevice.Model}`,
+                  Device: `${singleIoTDevice.Device}`,
+                  RegisteredOwner: `${singleIoTDevice.RegisteredOwner}`,
+                  PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
+                  IoTTopic: `device/${singleIoTDeviceId}/do`,
+                  Message: {
+                      move: 'look_left'
+                  },
+                  move: 'look_left'
+                })
+              }
+              variant='primary'
+            >
+              Look Left
+            </Button>
+            <Button
+              onClick={() =>
+                PubSub.publish(`device/${singleIoTDeviceId}/do`, {
+                  MessageId: uuidv4(),
+                  Timestamp: currentTimeISO,
+                  DeviceId: `${singleIoTDeviceId}`,
+                  DeviceName: `${singleIoTDevice.DeviceName}`,
+                  ShortName: `${singleIoTDevice.ShortName}`,
+                  Manufacturer:`${singleIoTDevice.Manufacturer}`,
+                  Model: `${singleIoTDevice.Model}`,
+                  Device: `${singleIoTDevice.Device}`,
+                  RegisteredOwner: `${singleIoTDevice.RegisteredOwner}`,
+                  PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
+                  IoTTopic: `device/${singleIoTDeviceId}/do`,
+                  Message: {
+                      move: 'look_right'
+                  },
+                  move: 'look_right'
+                })
+              }
+              variant='primary'
+            >
+              Look Right
+            </Button>
+            {/* <Button
+              onClick={() =>
+                PubSub.publish(`device/${singleIoTDeviceId}/do`, {
+                  MessageId: uuidv4(),
+                  Timestamp: currentTimeISO,
+                  DeviceId: `${singleIoTDeviceId}`,
+                  DeviceName: `${singleIoTDevice.DeviceName}`,
+                  ShortName: `${singleIoTDevice.ShortName}`,
+                  Manufacturer:`${singleIoTDevice.Manufacturer}`,
+                  Model: `${singleIoTDevice.Model}`,
+                  Device: `${singleIoTDevice.Device}`,
+                  RegisteredOwner: `${singleIoTDevice.RegisteredOwner}`,
+                  PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
+                  IoTTopic: `device/${singleIoTDeviceId}/do`,
+                  Message: {
+                      move: 'look_around'
                   }
                 })
               }
               variant='primary'
             >
               Look Around
-            </Button>
+            </Button> */}
             {/* TODO - Add more buttons here for 'Dance' and 'Speak'. Or have Textbox with 'submit' button for customizable speech */}
           </div>
         </div>
