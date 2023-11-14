@@ -187,3 +187,67 @@ resource "aws_iot_topic_rule" "mpc_devices_iot_to_dynamodb" {
   }
 
 }
+
+# Create AWS Greengrass Component
+resource "awscc_greengrassv2_component_version" "mpc_greengrass_component" {
+  count = var.create_greengrass_component ? 1 : 0
+
+  inline_recipe = <<-EOH
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.ros.pupper.dance
+ComponentVersion: '1.0.0'
+ComponentDescription: 'The ROS Pupper Application'
+ComponentPublisher: Amazon
+ComponentDependencies:
+  aws.greengrass.DockerApplicationManager:
+    VersionRequirement: ">=2.0.0 <2.1.0"
+  aws.greengrass.TokenExchangeService:
+    VersionRequirement: ">=2.0.0 <2.1.0"
+ComponentConfiguration:
+  DefaultConfiguration:
+    auto_start: True
+Manifests:
+  - Platform:
+      os: all
+    Lifecycle:
+        Bootstrap:
+          RequiresPrivilege: True
+          Script: |
+            echo "Bootstrapping the robot application! as root This runs only once during the deployment."
+            cat << EOF > {artifacts:path}/.env
+            AUTO_START={configuration:/auto_start}
+            SVCUID=$SVCUID
+            AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=$AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT
+            EOF
+            chown ggc_user:ggc_group {artifacts:path}/.env
+        Install:
+          Script: |
+            echo "Installing the robot application! This will run everytime the Greengrass core software is started."
+        Run:
+          Script: |
+            echo "Running the robot application! This is the main application execution script."
+            AWS_IOT_ENDPOINT=${data.aws_iot_endpoint.current.endpoint_address} docker-compose -f /docker-compose.yaml up
+        Shutdown: |
+            echo "Shutting down the robot application! This will run each time the component is stopped."
+            docker-compose -f /docker-compose.yaml down
+
+EOH
+
+}
+
+# Create AWS Greengrass Deployment
+resource "awscc_greengrassv2_deployment" "mpc_greengrass_deployment" {
+  count = var.create_greengrass_deployment ? 1 : 0
+
+  target_arn      = aws_iot_thing_group.minipupper_fleet.arn
+  deployment_name = "Deployment for dancers"
+  components = {
+    "aws.greengrass.Cli" = {
+      component_version = "2.12.0",
+    },
+    "${awscc_greengrassv2_component_version.example.component_name}" = {
+      component_version = "1.0.0",
+    }
+  }
+
+}
