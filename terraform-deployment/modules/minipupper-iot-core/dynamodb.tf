@@ -122,7 +122,27 @@ resource "aws_dynamodb_table_item" "mpc_gas_sensors_item" {
   })
 }
 
-# Create item in DynamoDB table for each defined EXISTING Mini Pupper (values coming from existing SSM Parameters)
+# # Create item in DynamoDB table for each defined EXISTING Mini Pupper (values coming from existing SSM Parameters)
+# resource "aws_dynamodb_table_item" "mpc_existing_devices_item" {
+#   count      = var.lookup_existing_minipuppers_ssm_parameters ? 1 : 0
+#   table_name = aws_dynamodb_table.mpc_devices.name
+#   hash_key   = aws_dynamodb_table.mpc_devices.hash_key
+
+#   item = jsonencode({
+#     # "${aws_dynamodb_table.mpc_devices.hash_key}" : { "S" : "${random_uuid.minipupper_device_id[each.key].result}" },
+#     "${aws_dynamodb_table.mpc_devices.hash_key}" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}" },
+#     "DeviceName" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_device_name_ssm[0].value}" },
+#     "ShortName" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_short_name_ssm[0].value}" },
+#     "ComputerModule" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_computer_module_ssm[0].value}" },
+#     "Manufacturer" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_manfacturer_ssm[0].value}" },
+#     "Model" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_model_ssm[0].value}" },
+#     "Device" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_device_ssm[0].value}" },
+#     "RegisteredOwner" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_registered_owner_ssm[0].value}" },
+#     "PrimaryLocation" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_primary_location_ssm[0].value}" },
+#   })
+# }
+
+# Create item in DynamoDB table for with hardcoded values for existing Mini Pupper
 resource "aws_dynamodb_table_item" "mpc_existing_devices_item" {
   count      = var.lookup_existing_minipuppers_ssm_parameters ? 1 : 0
   table_name = aws_dynamodb_table.mpc_devices.name
@@ -130,14 +150,14 @@ resource "aws_dynamodb_table_item" "mpc_existing_devices_item" {
 
   item = jsonencode({
     # "${aws_dynamodb_table.mpc_devices.hash_key}" : { "S" : "${random_uuid.minipupper_device_id[each.key].result}" },
-    "${aws_dynamodb_table.mpc_devices.hash_key}" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}" },
-    "DeviceName" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_device_name_ssm[0].value}" },
-    "ShortName" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_short_name_ssm[0].value}" },
-    "ComputerModule" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_computer_module_ssm[0].value}" },
-    "Manufacturer" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_manfacturer_ssm[0].value}" },
-    "Model" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_model_ssm[0].value}" },
-    "Device" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_device_ssm[0].value}" },
-    "RegisteredOwner" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_registered_owner_ssm[0].value}" },
-    "PrimaryLocation" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_primary_location_ssm[0].value}" },
+    "${aws_dynamodb_table.mpc_devices.hash_key}" : { "S" : "MiniPupper_2" },
+    "DeviceName" : { "S" : "MiniPupper" },
+    "ShortName" : { "S" : "MP" },
+    "ComputerModule" : { "S" : "RaspberryPi4B" },
+    "Manufacturer" : { "S" : "Mangdang" },
+    "Model" : { "S" : "Mini Pupper 2" },
+    "Device" : { "S" : "Mini Pupper" },
+    "RegisteredOwner" : { "S" : "Workshop Attendee" },
+    "PrimaryLocation" : { "S" : "re:Invent" },
   })
 }
