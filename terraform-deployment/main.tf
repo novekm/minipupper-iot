@@ -20,7 +20,7 @@ module "minipupper-iot-core" {
   # If not at an AWS Event (using a provided AWS account) these values will not exist in your account
   # and the lookup will fail and throw and error.
 
-  lookup_existing_general_ssm_parameters     = false
+  # lookup_existing_general_ssm_parameters     = false
   lookup_existing_minipuppers_ssm_parameters = false
 
   create_greengrass_component  = false
