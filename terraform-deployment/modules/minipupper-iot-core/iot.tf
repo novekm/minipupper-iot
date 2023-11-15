@@ -196,7 +196,7 @@ resource "awscc_greengrassv2_component_version" "mpc_greengrass_component" {
 
   inline_recipe = <<-EOH
 RecipeFormatVersion: '2020-01-25'
-ComponentName: com.example.ros.pupper.dance
+ComponentName: com.example.ros.pupper.301workshop
 ComponentVersion: '1.0.0'
 ComponentDescription: 'The ROS Pupper Application'
 ComponentPublisher: Amazon
@@ -242,8 +242,8 @@ resource "awscc_greengrassv2_deployment" "mpc_greengrass_deployment" {
   count = var.create_greengrass_deployment ? 1 : 0
 
   # target_arn      = aws_iot_thing_group.minipupper_fleet.arn
-  target_arn      = "arn:aws:iot:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:thinggroup/dancers"
-  deployment_name = "Deployment for dancers"
+  target_arn      = "arn:aws:iot:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:thinggroup/MiniPupper_Fleet"
+  deployment_name = "Deployment for MiniPupper_Fleet"
   components = {
     "aws.greengrass.Cli" = {
       component_version = "2.12.0",
