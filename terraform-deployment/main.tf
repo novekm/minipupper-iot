@@ -20,7 +20,6 @@ module "minipupper-iot-core" {
   # If not at an AWS Event (using a provided AWS account) these values will not exist in your account
   # and the lookup will fail and throw and error.
 
-  # lookup_existing_general_ssm_parameters     = false
   lookup_existing_minipuppers_ssm_parameters = false
 
   create_greengrass_component  = false
@@ -32,20 +31,6 @@ module "minipupper-iot-core" {
   # Dynamic Creation of IoT Things for Mini Puppers and Gas Sensors
   // Enter an object for each gas sensor you would like to connect
 
-
-  # mpc_minipuppers = {
-  #   // no spaces allowed in strings
-  #   MP1 : {
-  #     name             = "MiniPupper"
-  #     short_name       = "MP"
-  #     computer_module  = "RaspberryPi4B"
-  #     manufacturer     = "Mangdang"
-  #     model            = "Mini Pupper 2"
-  #     device           = "Mini Pupper"
-  #     registered_owner = "Workshop Participant" // Replace with your name
-  #     primary_location = "re:Invent"
-  #   },
-  # }
   mpc_gas_sensors = {
     // no spaces allowed in strings
     Gas1 : {
