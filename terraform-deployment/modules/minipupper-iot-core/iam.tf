@@ -233,7 +233,7 @@ data "aws_iam_policy_document" "mpc_greengrass_v2_token_exchange_2" {
     resources = ["arn:aws:iot:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:client/CLIENTID"]
   }
 }
-resource "aws_iam_policy" "mpc_greengrass_v2_token_exchange_restricted_access_policy" {
+resource "aws_iam_policy" "mpc_greengrass_v2_token_exchange_restricted_access_policy_2" {
   count       = var.create_restricted_access_roles ? 1 : 0
   name        = "GreengrassV2TokenExchangeRoleAccess_2"
   description = "Seoncd Policy for GreengrassV2TokenExchangeRole."
@@ -505,13 +505,14 @@ resource "aws_iam_role" "mpc_iot_to_dynamodb_restricted_access" {
 
 # NEW
 # GreengrassV2TokenExchangeRole
-resource "aws_iam_role" "mpc_iot_to_dynamodb_restricted_access" {
+resource "aws_iam_role" "mpc_iot_token_exchange_role_restricted_access" {
   # Conditional create of the role - default is 'TRUE'
   count              = var.create_restricted_access_roles ? 1 : 0
-  name               = "mpc_iot_to_dynamodb_restricted_access"
+  name               = "GreengrassV2TokenExchangeRole"
   assume_role_policy = data.aws_iam_policy_document.mpc_iot_credentials_trust_relationship.json
   managed_policy_arns = [
     aws_iam_policy.mpc_greengrass_v2_token_exchange_restricted_access_policy[0].arn,
+    aws_iam_policy.mpc_greengrass_v2_token_exchange_restricted_access_policy_2[0].arn,
     aws_iam_policy.mpc_robot_restricted_access_policy[0].arn,
   ]
 }
