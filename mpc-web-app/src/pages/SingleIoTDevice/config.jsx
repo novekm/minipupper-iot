@@ -356,7 +356,8 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   IoTTopic: `device/${singleIoTDeviceId}/do`,
                   Message: {
                       move: 'stand'
-                  }
+                  },
+                  move: 'stand'
                 })
               }
             >
@@ -378,7 +379,8 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   IoTTopic: `device/${singleIoTDeviceId}/do`,
                   Message: {
                       move: 'sit'
-                  }
+                  },
+                  move: 'sit'
                 })
               }
             >
@@ -438,7 +440,7 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   move: 'look_up'
                 })
               }
-              variant='primary'
+              // variant='primary'
             >
               Look Up
             </Button>
@@ -462,7 +464,7 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   move: 'look_down'
                 })
               }
-              variant='primary'
+              // variant='primary'
             >
               Look Down
             </Button>
@@ -486,7 +488,7 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   move: 'look_left'
                 })
               }
-              variant='primary'
+              // variant='primary'
             >
               Look Left
             </Button>
@@ -510,7 +512,7 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   move: 'look_right'
                 })
               }
-              variant='primary'
+              // variant='primary'
             >
               Look Right
             </Button>
