@@ -41,14 +41,16 @@ resource "aws_iot_thing" "all_gas_sensors" {
 
 // Create IoT Thing Group for all Mini Puppers
 resource "aws_iot_thing_group" "minipupper_fleet" {
-  name = "MiniPupper_Fleet"
+  count = var.create_minipupper_fleet_iot_thing_group ? 1 : 0
+  name  = "MPC_MiniPupper_Fleet"
   properties {
     description = "Group containing all Mini Puppers."
   }
 }
 // Create IoT Thing Group for all gas sensors
 resource "aws_iot_thing_group" "all_gas_sensors" {
-  name = "All_Gas_Sensors"
+  count = var.create_gas_sensor_fleet_iot_thing_group ? 1 : 0
+  name  = "MPC_Gas_Sensor_Fleet"
   properties {
     description = "Group containing all Gas Sensors."
   }
