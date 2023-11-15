@@ -122,7 +122,7 @@ resource "aws_dynamodb_table_item" "mpc_gas_sensors_item" {
   })
 }
 
-# Create item in DynamoDB table for each defined EXISTING Mini Pupper (values coming from existing SSM Parameters)
+# Create item in DynamoDB table for the EXISTING Mini Pupper (values coming from existing SSM Parameters)
 resource "aws_dynamodb_table_item" "mpc_existing_devices_item" {
   count      = var.lookup_existing_minipuppers_ssm_parameters ? 1 : 0
   table_name = aws_dynamodb_table.mpc_devices.name
@@ -141,3 +141,4 @@ resource "aws_dynamodb_table_item" "mpc_existing_devices_item" {
     "PrimaryLocation" : { "S" : "${data.aws_ssm_parameter.mpc_existing_minipupper_primary_location_ssm[0].value}" },
   })
 }
+

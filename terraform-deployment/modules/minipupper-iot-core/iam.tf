@@ -138,9 +138,25 @@ data "aws_iam_policy_document" "mpc_iot_trust_relationship" {
   }
 }
 
+
+# NEW
+# IoT CredentialsTrust Relationship
+data "aws_iam_policy_document" "mpc_iot_credentials_trust_relationship" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["credentials.iot.amazonaws.com"]
+    }
+  }
+}
+
+
+
 # --- CUSTOMER MANAGED POLICIES (RESTRICTED ACCESS) ---
 # - IoT Policies -
-# Policy to AWS IoT Rule to PutItem in MPC MQTT DynamoDB Table
+# Policy to allow AWS IoT Rule to PutItem in MPC MQTT DynamoDB Table
 data "aws_iam_policy_document" "mpc_iot_to_dynamodb_restricted_access_policy" {
   statement {
     effect    = "Allow"
@@ -154,6 +170,129 @@ resource "aws_iam_policy" "mpc_iot_to_dynamodb_restricted_access_policy" {
   description = "Policy granting DynamoDB 'PutItem' access for the mpc_devices_mqtt DynamoDB table."
   policy      = data.aws_iam_policy_document.mpc_iot_to_dynamodb_restricted_access_policy.json
 }
+
+
+
+
+# NEW
+# Policy to allow for GreenGrassV2TokenExchange FIRST
+data "aws_iam_policy_document" "mpc_greengrass_v2_token_exchange" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
+      "s3:GetBucketLocation",
+    ]
+    resources = ["*"]
+  }
+}
+resource "aws_iam_policy" "mpc_greengrass_v2_token_exchange_restricted_access_policy" {
+  count       = var.create_restricted_access_roles ? 1 : 0
+  name        = "GreengrassV2TokenExchangeRoleAccess"
+  description = "First Policy for GreengrassV2TokenExchangeRole."
+  policy      = data.aws_iam_policy_document.mpc_greengrass_v2_token_exchange.json
+}
+# Policy to allow for GreenGrassV2TokenExchange SECOND
+data "aws_iam_policy_document" "mpc_greengrass_v2_token_exchange_2" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "iot:DescribeCertificate",
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
+      "s3:GetBucketLocation"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "iot:Publish",
+      "iot:Receive",
+      "iot:RetainPublish"
+    ]
+    resources = ["arn:aws:iot:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:topic/device/MiniPupper_2/*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "iot:Subscribe"
+    ]
+    resources = ["arn:aws:iot:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:topicfilter/device/MiniPupper_2/*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "iot:Connect"
+    ]
+    resources = ["arn:aws:iot:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:client/CLIENTID"]
+  }
+}
+resource "aws_iam_policy" "mpc_greengrass_v2_token_exchange_restricted_access_policy_2" {
+  count       = var.create_restricted_access_roles ? 1 : 0
+  name        = "GreengrassV2TokenExchangeRoleAccess_2"
+  description = "Seoncd Policy for GreengrassV2TokenExchangeRole."
+  policy      = data.aws_iam_policy_document.mpc_greengrass_v2_token_exchange_2.json
+}
+# Policy for robot
+data "aws_iam_policy_document" "mpc_robot" {
+  statement {
+    effect  = "Allow"
+    actions = ["s3:ListBucket"]
+    resources = [
+      "${aws_s3_bucket.mpc_greengrass_s3_bucket.arn}",
+      "${aws_s3_bucket.mpc_greengrass_s3_bucket.arn}/*",
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject"
+    ]
+    resources = [
+      "${aws_s3_bucket.mpc_greengrass_s3_bucket.arn}",
+      "${aws_s3_bucket.mpc_greengrass_s3_bucket.arn}/*",
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = ["greengrass:*"]
+    resources = ["*"]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = ["iot:*"]
+    resources = ["*"]
+  }
+}
+resource "aws_iam_policy" "mpc_robot_restricted_access_policy" {
+  count       = var.create_restricted_access_roles ? 1 : 0
+  name        = "RobotPolicy"
+  description = "Policy for Robot."
+  policy      = data.aws_iam_policy_document.mpc_robot.json
+}
+
+
+
+
+
+
 # - DynamoDB Policies -
 # DynamoDB Customer Managed Policy (All Actions)
 data "aws_iam_policy_document" "mpc_dynamodb_restricted_access_policy" {
@@ -360,6 +499,21 @@ resource "aws_iam_role" "mpc_iot_to_dynamodb_restricted_access" {
   assume_role_policy = data.aws_iam_policy_document.mpc_iot_trust_relationship.json
   managed_policy_arns = [
     aws_iam_policy.mpc_iot_to_dynamodb_restricted_access_policy[0].arn
+  ]
+}
+
+
+# NEW
+# GreengrassV2TokenExchangeRole
+resource "aws_iam_role" "mpc_iot_token_exchange_role_restricted_access" {
+  # Conditional create of the role - default is 'TRUE'
+  count              = var.create_restricted_access_roles ? 1 : 0
+  name               = "GreengrassV2TokenExchangeRole"
+  assume_role_policy = data.aws_iam_policy_document.mpc_iot_credentials_trust_relationship.json
+  managed_policy_arns = [
+    aws_iam_policy.mpc_greengrass_v2_token_exchange_restricted_access_policy[0].arn,
+    aws_iam_policy.mpc_greengrass_v2_token_exchange_restricted_access_policy_2[0].arn,
+    aws_iam_policy.mpc_robot_restricted_access_policy[0].arn,
   ]
 }
 

@@ -27,7 +27,7 @@ function EmptyState({ title, subtitle, action }) {
 }
 
 export default function CollectionHooksTable({iotMessages, }) {
-  const [preferences, setPreferences] = useState({ pageSize: 10, visibleContent: ['Timestamp', 'Message','DeviceId', 'Device','RegisteredOwner', 'RegisteredLocation',] });
+  const [preferences, setPreferences] = useState({ pageSize: 10, visibleContent: ['Timestamp', 'Message','DeviceId', 'Device','RegisteredOwner', 'PrimaryLocation',] });
   const MESSAGES = [iotMessages]
 
 

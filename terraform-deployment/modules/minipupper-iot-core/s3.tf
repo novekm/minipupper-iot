@@ -13,3 +13,14 @@ resource "aws_s3_object" "object" {
 
   depends_on = [local_file.docker_compose_existing_minipupper]
 }
+
+
+
+resource "aws_s3_bucket" "mpc_greengrass_s3_bucket" {
+  bucket_prefix = "mpc-greengrass-s3-bucket"
+
+  # tags = {
+  #   Name        = "My bucket"
+  #   Environment = "Dev"
+  # }
+}

@@ -58,23 +58,23 @@ export const columnDefinitions = [
   {
     id: 'Device',
     header: 'Device',
-    cell: (item) => item.DeviceId,
+    cell: (item) => item.Device,
     // ariaLabel: createLabelFunction('DeviceId'),
     sortingField: 'Device',
   },
   {
     id: 'RegisteredOwner',
     header: 'Registered Owner',
-    cell: (item) => item.DeviceId,
+    cell: (item) => item.RegisteredOwner,
     // ariaLabel: createLabelFunction('DeviceId'),
     sortingField: 'RegisteredOwner',
   },
   {
-    id: 'RegisteredLocation',
-    header: 'Registered Location',
-    cell: (item) => item.DeviceId,
+    id: 'PrimaryLocation',
+    header: 'Primary Location',
+    cell: (item) => item.PrimaryLocation,
     // ariaLabel: createLabelFunction('DeviceId'),
-    sortingField: 'RegisteredLocation',
+    sortingField: 'PrimaryLocation',
   },
 
 

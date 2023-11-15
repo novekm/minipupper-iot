@@ -16,17 +16,18 @@ module "minipupper-iot-core" {
   mpc_wifi_password_1 = "" // enter password for the primary local network you want devices to
 
   # Conditional Data Source fetch of existing values in SSM Parameter store.
-  # Note: Only use these variables if at an AWS Event, or you modify the module to use your own parameters.
-  # If not at an AWS Event (using a provided AWS account) these values will not exist in your account
-  # and the lookup will fail and throw and error.
-
-  lookup_existing_general_ssm_parameters     = false
   lookup_existing_minipuppers_ssm_parameters = false
+
+  # Conditional Creation of Greengrass Component and Greengrass Deployment.
+  create_greengrass_component  = false
+  create_greengrass_deployment = false
+
 
 
   # - IoT -
   # Dynamic Creation of IoT Things for Mini Puppers and Gas Sensors
   // Enter an object for each gas sensor you would like to connect
+
   mpc_gas_sensors = {
     // no spaces allowed in strings
     Gas1 : {
