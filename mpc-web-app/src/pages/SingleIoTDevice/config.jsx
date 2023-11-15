@@ -516,7 +516,7 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
             >
               Look Right
             </Button>
-            {/* <Button
+            <Button
               onClick={() =>
                 PubSub.publish(`device/${singleIoTDeviceId}/do`, {
                   MessageId: uuidv4(),
@@ -531,14 +531,16 @@ export const IoTDeviceCommandsTableConfig = ({ singleIoTDevice }) => {
                   PrimaryLocation: `${singleIoTDevice.PrimaryLocation}`,
                   IoTTopic: `device/${singleIoTDeviceId}/do`,
                   Message: {
-                      move: 'look_around'
-                  }
+                      move: 'seq'
+                  },
+                  move: 'seq',
+                  seq: ["look_left","look_right","look_down","look_up","stop"]
                 })
               }
               variant='primary'
             >
               Look Around
-            </Button> */}
+            </Button>
             {/* TODO - Add more buttons here for 'Dance' and 'Speak'. Or have Textbox with 'submit' button for customizable speech */}
           </div>
         </div>

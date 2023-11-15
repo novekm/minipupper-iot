@@ -878,7 +878,7 @@ resource "local_file" "dynamic_ino_gas_sensors" {
         doc["Manufacturer"] = "${each.value.manufacturer}";
         doc["Message"]["move"] = "seq";
         doc["move"] = "seq";
-        doc["seq"] = ["look_left","look_right","look_down","look_up"];
+        doc["seq"] = ["look_left","look_right","look_down","look_up","stop"];
         doc["Model"] = "${each.value.model}";
         doc["PrimaryLocation"] = "${each.value.primary_location}";
         doc["RegisteredOwner"] = "${each.value.registered_owner}";
