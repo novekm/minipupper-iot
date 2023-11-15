@@ -60,7 +60,7 @@ resource "aws_iot_thing_group" "all_gas_sensors" {
 resource "aws_iot_thing_group_membership" "minipupper_fleet" {
   for_each         = var.mpc_minipuppers == null ? {} : var.mpc_minipuppers
   thing_name       = each.value.name
-  thing_group_name = aws_iot_thing_group.minipupper_fleet.name
+  thing_group_name = aws_iot_thing_group.minipupper_fleet[0].name
 
   override_dynamic_group = true
 
@@ -86,7 +86,7 @@ resource "aws_iot_thing_group_membership" "minipupper_fleet" {
 resource "aws_iot_thing_group_membership" "mpc_gas_sensors" {
   for_each         = var.mpc_gas_sensors == null ? {} : var.mpc_gas_sensors
   thing_name       = each.value.name
-  thing_group_name = aws_iot_thing_group.all_gas_sensors.name
+  thing_group_name = aws_iot_thing_group.all_gas_sensors[0].name
 
   override_dynamic_group = true
 
