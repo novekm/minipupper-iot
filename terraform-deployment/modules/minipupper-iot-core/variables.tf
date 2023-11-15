@@ -415,6 +415,16 @@ variable "mpc_gas_sensors" {
   type    = map(any)
   default = {}
 }
+variable "create_minipupper_fleet_iot_thing_group" {
+  type    = bool
+  default = true
+
+}
+variable "create_gas_sensor_fleet_iot_thing_group" {
+  type    = bool
+  default = true
+
+}
 variable "create_greengrass_component" {
   type    = bool
   default = false
