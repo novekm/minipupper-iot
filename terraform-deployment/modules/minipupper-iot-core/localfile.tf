@@ -366,7 +366,7 @@ resource "local_file" "dynamic_secrets_h_gas_sensors" {
 
   #define MINIPUPPER_PUB_TOPIC        "device/${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}/do"
   #define MINIPUPPER_SUB_TOPIC        "device/${data.aws_ssm_parameter.mpc_existing_minipupper_device_id_ssm[0].value}/do"
-  #define MINIPUPPER_ACTION_SELF      "lookaround"
+  #define MINIPUPPER_ACTION_SELF      "look_up"
 
   #define MINIPUPPER_GLOBAL_PUB_TOPIC "MP-global/data"
   #define MINIPUPPER_GLOBAL_SUB_TOPIC "MP-global/data"
@@ -876,7 +876,9 @@ resource "local_file" "dynamic_ino_gas_sensors" {
         doc["Device"] = "${each.value.device}";
         doc["DeviceName"] = "${each.value.name}";
         doc["Manufacturer"] = "${each.value.manufacturer}";
-        doc["Message"]["move"] = MINIPUPPER_ACTION_SELF;
+        doc["Message"]["move"] = "seq";
+        doc["move"] = "seq";
+        doc["seq"] = ["look_left","look_right","look_down","look_up"];
         doc["Model"] = "${each.value.model}";
         doc["PrimaryLocation"] = "${each.value.primary_location}";
         doc["RegisteredOwner"] = "${each.value.registered_owner}";
