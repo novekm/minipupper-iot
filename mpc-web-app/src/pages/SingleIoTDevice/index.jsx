@@ -48,22 +48,16 @@ import '../../common/styles/base.scss';
 // - ASSETS -
 
 // - AMPLIFY -
-import { API, graphqlOperation, Amplify, Auth, PubSub, Hub } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
+
 import {
-  AWSIoTProvider,
+  PubSub,
   CONNECTION_STATE_CHANGE,
   ConnectionState,
 } from '@aws-amplify/pubsub';
-
+import { pubsub } from '../../config/amplify-config';
 // - API FUNCTIONS -
-import {
-  getIoTDevice,
-  listIoTDevices,
-  getIoTMessage,
-  listIoTMessages,
-  listIoTMessagesByDeviceId,
-} from '../../graphql/queries';
-
+import * as queries from '../../graphql/queries';
 
 // Main component for page
 const SingleIoTDevice = () => {
@@ -74,13 +68,15 @@ const SingleIoTDevice = () => {
   const [lastTwelveMonth, setLastTwelveMonth] = useState([]);
   const [qualifiedMonthMap, setQualifiedMonths] = useState([]);
   const [pieChart, setPieChart] = useState([]);
-
-  // Fetch data for one IoT Device by 'DeviceId' specified in browser URL via useParams hook
+ 
+  // Instantiate GraphQL client
+  const client = generateClient();
   const fetchSingleIoTDevice = async () => {
     try {
-      const singleIoTDeviceData = await API.graphql(
-        graphqlOperation(getIoTDevice, { DeviceId: `${DeviceId}` })
-      );
+      const singleIoTDeviceData = await client.graphql({
+        query: queries.getIoTDevice,
+        variables: {DeviceId : `${DeviceId}` }
+      });
       const singleIoTDeviceDataList = singleIoTDeviceData.data.getIoTDevice;
       console.log('Single IoT Device List', singleIoTDeviceDataList);
       setSingleIoTDevice(singleIoTDeviceDataList);
@@ -89,30 +85,13 @@ const SingleIoTDevice = () => {
       console.log('error on fetching single IoT Device', error);
     }
   };
-  // // Fetch data for all IoT messages in the MPC MQTT DynamoDB table
-  // const fetchIoTMessages = async () => {
-  //   try {
-  //     const iotMessagesData = await API.graphql(
-  //       graphqlOperation(listIoTMessages, { limit: 10000 })
-  //     );
-
-  //     const iotMessagesDataList = iotMessagesData.data.listIoTMessages.messages;
-  //     console.log('IoTMessagesFromDynamoDB<SingleIoTDevice/index.jsx>', iotMessagesDataList);
-  //     getPieChartMap(iotMessagesDataList);
-  //     getLastTwelveMonthAndQualifiedMonths(iotMessagesDataList);
-  //     setIoTMessages(iotMessagesDataList);
-  //     // setLoading(false)
-  //   } catch (error) {
-  //     console.log('error on fetching IoT Messages', error);
-  //   }
-  // };
-  // Fetch data for all IoT messages filtered by DeviceId in the IoT MQTT DynamoDB table
+  
   const fetchIoTMessagesByDeviceId = async () => {
     try {
-      const iotMessagesData = await API.graphql(
-        graphqlOperation(listIoTMessagesByDeviceId, {DeviceId: DeviceId, limit: 10000 })
-      );
-
+      const iotMessagesData = await client.graphql({
+        query: queries.listIoTMessagesByDeviceId,
+        variables: {DeviceId : `${DeviceId}` }
+      });
       const iotMessagesDataList = iotMessagesData.data.listIoTMessagesByDeviceId.messages;
       console.log('IoTMessagesFromDynamoDB<SingleIoTDevice/index.jsx>', iotMessagesDataList);
       getPieChartMap(iotMessagesDataList);
@@ -172,7 +151,7 @@ const SingleIoTDevice = () => {
     // fetchIoTMessages();
     fetchIoTMessagesByDeviceId();
 
-    const sub = PubSub.subscribe(`device/${singleIoTDevice.DeviceId}/data`).subscribe({
+    const sub = pubSub.subscribe(`device/${singleIoTDevice.DeviceId}/data`).subscribe({
       next: (data) => console.log('Message received', data),
       error: (error) => console.error(error),
       complete: () => console.log('Done'),
@@ -185,7 +164,7 @@ const SingleIoTDevice = () => {
   }, []);
   // Subscribe to the specific global topic relating to the current IoT Device on the page on page load
   useEffect(() => {
-    const sub = PubSub.subscribe(
+    const sub = pubSub.subscribe(
       `${singleIoTDevice.DeviceName}/sub-global`
     ).subscribe({
       next: (data) => console.log('Message received', data),

@@ -25,13 +25,20 @@ import {
   MixedLineBarChart,
   PieChart
 } from '@cloudscape-design/components';
-import { API, graphqlOperation, Amplify, Auth, PubSub, Hub } from 'aws-amplify';
+//import { API, graphqlOperation, Amplify, Auth, PubSub, Hub } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import {
-  AWSIoTProvider,
   CONNECTION_STATE_CHANGE,
   // PubSub,
   ConnectionState,
 } from '@aws-amplify/pubsub';
+import { Hub } from 'aws-amplify/utils';
+// import {
+//   AWSIoTProvider,
+//   CONNECTION_STATE_CHANGE,
+//   // PubSub,
+//   ConnectionState,
+// } from '@aws-amplify/pubsub';
 import {
   TableEmptyState,
   InfoLink,

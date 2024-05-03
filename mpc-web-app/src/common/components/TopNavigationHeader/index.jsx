@@ -6,7 +6,8 @@ import { TopNavigation } from '@cloudscape-design/components';
 import { applyMode, Mode } from "@cloudscape-design/global-styles";
 
 // Amplify
-import { Auth } from 'aws-amplify';
+//import { Auth } from 'aws-amplify';
+import { signOut } from 'aws-amplify/auth';
 // Company logo. Upload your own logo and point to it to change this in the TopNavigation.
 import logo from '../../../public/images/AWS_logo_RGB_REV.png';
 
@@ -19,7 +20,8 @@ const TopNavigationHeader = ({ user }) => {
   // Function to sign user out
   async function signOut() {
     try {
-      await Auth.signOut();
+      //await Auth.signOut();
+      await signOut();
     } catch (error) {
       console.log('error signing out: ', error);
     }
