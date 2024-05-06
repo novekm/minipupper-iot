@@ -21,12 +21,13 @@ import {
   Pagination,
   Table,
 } from '@cloudscape-design/components';
-
-import { API, graphqlOperation } from 'aws-amplify';
-import {
-  listIoTDevices,
-  getIoTDevice,
-} from '../../../graphql/queries';
+import { generateClient } from 'aws-amplify/api';
+import * as queries from '../../../graphql/queries';
+// import { API, graphqlOperation } from 'aws-amplify';
+// import {
+//   listIoTDevices,
+//   getIoTDevice,
+// } from '../../../graphql/queries';
 // import { deleteIoTDevice } from '../../../graphql/mutations';
 
 import { getFilterCounterText } from '../../../common/resources/tableCounterStrings';
@@ -95,12 +96,27 @@ const IoTDevicesTable = ({ updateTools, saveWidths, columnDefinitions }) => {
   useEffect(() => {
     fetchIoTDevices();
   }, []);
+  const client = generateClient();
 
+  // const fetchIoTDevices = async () => {
+  //   try {
+  //     const IoTDeviceData = await API.graphql(
+  //       graphqlOperation(listIoTDevices, { limit: 10000 })
+  //     );
+  //     const IoTDeviceDataList = IoTDeviceData.data.listIoTDevices.devices;
+  //     console.log('IoT Devices List', IoTDeviceDataList);
+  //     setIoTDevices(IoTDeviceDataList);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log('error on fetching IoT Devices', error);
+  //   }
+  // };
   const fetchIoTDevices = async () => {
     try {
-      const IoTDeviceData = await API.graphql(
-        graphqlOperation(listIoTDevices, { limit: 10000 })
-      );
+      const IoTDeviceData = await client.graphql({
+        query: queries.listIoTDevices,
+        variables: { limit: 10000 }
+      });
       const IoTDeviceDataList = IoTDeviceData.data.listIoTDevices.devices;
       console.log('IoT Devices List', IoTDeviceDataList);
       setIoTDevices(IoTDeviceDataList);

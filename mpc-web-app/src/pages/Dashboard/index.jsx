@@ -58,21 +58,31 @@ import '../../common/styles/servicehomepage.scss';
 import awsLogo from '../../public/images/AWS_logo_RGB_REV.png';
 
 // - AMPLIFY -
-import { API, graphqlOperation, Amplify, Auth, PubSub, Hub } from 'aws-amplify';
+//import { API, graphqlOperation, Amplify, Auth, PubSub, Hub } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
+import { PubSub } from '@aws-amplify/pubsub'
+import { generateClient } from 'aws-amplify/api'
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import {
-  AWSIoTProvider,
   CONNECTION_STATE_CHANGE,
   ConnectionState,
 } from '@aws-amplify/pubsub';
+import { pubsub } from '../../config/amplify-config';
+// import {
+//   AWSIoTProvider,
+//   CONNECTION_STATE_CHANGE,
+//   ConnectionState,
+// } from '@aws-amplify/pubsub';
+
 
 // - API FUNCTIONS -
-import {
-  getIoTDevice,
-  listIoTDevices,
-  getIoTMessage,
-  listIoTMessages,
-} from '../../graphql/queries';
+import * as queries from '../../graphql/queries';
+// import {
+//   getIoTDevice,
+//   listIoTDevices,
+//   getIoTMessage,
+//   listIoTMessages,
+// } from '../../graphql/queries';
 
 
 const Dashboard = ({ user }) => {
@@ -105,11 +115,25 @@ const Content = ({ user, isInProgress }) => {
   const [pieChart, setPieChart] = useState([]);
 
   // Fetch all IoTDevices in the MPC DynamoDB Metadata Table
+  // const fetchIoTDevices = async () => {
+  //   try {
+  //     const IoTDeviceData = await API.graphql(
+  //       graphqlOperation(listIoTDevices, { limit: 10000 }) // limit fetch to 1000 items
+  //     );
+  //     const IoTDeviceDataList = IoTDeviceData.data.listIoTDevices.devices;
+  //     console.log('IoT Device List', IoTDeviceDataList);
+  //     setIoTDevices(IoTDeviceDataList);
+  //   } catch (error) {
+  //     console.log('error on fetching IoT Devices', error);
+  //   }
+  // };
+  const client = generateClient()
   const fetchIoTDevices = async () => {
     try {
-      const IoTDeviceData = await API.graphql(
-        graphqlOperation(listIoTDevices, { limit: 10000 }) // limit fetch to 1000 items
-      );
+      const IoTDeviceData = await client.graphql({
+        query: queries.listIoTDevices,
+        variables: { limit:10000 }
+      });
       const IoTDeviceDataList = IoTDeviceData.data.listIoTDevices.devices;
       console.log('IoT Device List', IoTDeviceDataList);
       setIoTDevices(IoTDeviceDataList);
@@ -119,12 +143,29 @@ const Content = ({ user, isInProgress }) => {
   };
 
   // Fetch data for all IoT messages in the MPC MQTT DynamoDB table
+  // const fetchIoTMessages = async () => {
+  //   try {
+  //     const iotMessagesData = await API.graphql(
+  //       graphqlOperation(listIoTMessages, { limit: 10000 })
+  //     );
+
+  //     const iotMessagesDataList = iotMessagesData.data.listIoTMessages.messages;
+  //     console.log('IoTMessagesFromDynamoDB<SingleIoTDevice/index.jsx>', iotMessagesDataList);
+  //     getPieChartMap(iotMessagesDataList);
+  //     getLastTwelveMonthAndQualifiedMonths(iotMessagesDataList);
+  //     setIoTMessages(iotMessagesDataList);
+  //     // setLoading(false)
+  //   } catch (error) {
+  //     console.log('error on fetching IoT Messages', error);
+  //   }
+  // };
+
   const fetchIoTMessages = async () => {
     try {
-      const iotMessagesData = await API.graphql(
-        graphqlOperation(listIoTMessages, { limit: 10000 })
-      );
-
+      const iotMessagesData = await client.graphql({
+        query: queries.listIoTMessages,
+        variables: { limit:10000 }
+      });
       const iotMessagesDataList = iotMessagesData.data.listIoTMessages.messages;
       console.log('IoTMessagesFromDynamoDB<SingleIoTDevice/index.jsx>', iotMessagesDataList);
       getPieChartMap(iotMessagesDataList);
@@ -179,7 +220,7 @@ const Content = ({ user, isInProgress }) => {
     fetchIoTDevices();
     fetchIoTMessages();
 
-    const sub = PubSub.subscribe(`device/${singleIoTDevice.DeviceId}/data`).subscribe({
+    const sub = pubSub.subscribe(`device/${singleIoTDevice.DeviceId}/data`).subscribe({
       next: (data) => console.log('Message received', data),
       error: (error) => console.error(error),
       complete: () => console.log('Done'),

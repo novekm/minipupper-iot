@@ -13,7 +13,8 @@ import { Route, Routes, Link, useParams } from 'react-router-dom';
 
 // - CORE COMPONENTS -
 // AMPLIFY
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { AmplifyConfig } from '../config/amplify-config'; // NO TOUCHY
@@ -36,7 +37,7 @@ import '@cloudscape-design/global-styles/index.css';
 
 // Uncomment line below for debugging
 // Amplify.Logger.LOG_LEVEL = 'DEBUG';
-Auth.currentCredentials().then((info) => {
+fetchAuthSession().then((info) => {
   const cognitoIdentityId = info.identityId;
   console.log('Cognito Identity ID:', cognitoIdentityId);
 });
